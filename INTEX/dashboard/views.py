@@ -60,6 +60,6 @@ def logoutPageView(request):
  
 def indexPageView(request):
     context = {
-        'currentPerson' : Person.objects.get(owner=request.user.id)
+        'currentPerson' : Person.objects.get(personID=request.user.id)
     }
     return render(request, 'dashboard/index.html', context)
