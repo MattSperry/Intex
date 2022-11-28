@@ -2,7 +2,6 @@ from django.db import models
  
 # Create your models here.
 class Comorbidity(models.Model):
-    comorbidityID = models.AutoField(primary_key=True, default=1)
     name = models.CharField(max_length=30)
 
     def __str__(self):
