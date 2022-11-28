@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import MovieData
+from .models import Person
 from .forms import MovieDataForm
  
 # Create your views here.
  
 def index(request):
-    data = MovieData.objects.all()
+    data = Person.objects.all()
     if request.method == 'POST':
         form = MovieDataForm(request.POST)
         if form.is_valid():
