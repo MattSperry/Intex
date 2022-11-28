@@ -11,7 +11,7 @@ class Comorbidity(models.Model):
         db_table = 'comorbidity'
 
 class Person(models.Model):
-    personID = models.AutoField(primary_key=True)
+    personID = models.OneToOneField('auth.User', on_delete=models.CASCADE, primary_key=True)
     first_name = models.CharField(max_length = 30)
     last_name = models.CharField(max_length = 30)
     comorbidity = models.ForeignKey('Comorbidity', null=True, blank=True, on_delete=models.SET_NULL)
