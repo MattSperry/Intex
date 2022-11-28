@@ -2,6 +2,7 @@ from django.db import models
  
 # Create your models here.
 class Comorbidity(models.Model):
+    comorbidityID = models.AutoField(primary_key=True, default=1)
     name = models.CharField(max_length=30)
 
     def __str__(self):
@@ -20,7 +21,7 @@ class Person(models.Model):
     height = models.IntegerField(default=72)
 
     def __str__(self):
-        return(self.name)
+        return(self.first_name + ' ' + self.last_name)
 
     class Meta:
         db_table = 'person'
