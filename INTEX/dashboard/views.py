@@ -4,6 +4,7 @@ from .forms import UserForm, PersonForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
  
  
 # Create your views here.
