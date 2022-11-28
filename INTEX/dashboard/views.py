@@ -71,7 +71,7 @@ def journalPageView(request):
         'data': data,
         'form': form,
     }
-    return render(request, 'dashboard/input.html', context)
+    return render(request, 'dashboard/journal.html', context)
  
 def indexPageView(request):
     context = {
