@@ -1,13 +1,24 @@
 from django.db import models
  
 # Create your models here.
-class MovieData(models.Model):
-    movie = models.CharField(max_length=100)
-    domesticBoxOffice = models.IntegerField()
- 
-    class Meta:
-        verbose_name_plural = 'Movie Domestic Box Office Data'
-        db_table = 'movie_data'
- 
+class Comorbidity(models.Model):
+    name = models.CharField(max_length=30)
+
     def __str__(self):
-        return f'{self.movie}-{self.domesticBoxOffice}'
+        return(self.name)
+
+    class Meta:
+        db_table = 'comorbidity'
+class Person(models.Model):
+    first_name = models.CharField(max_length = 30)
+    last_name = models.CharField(max_length = 30)
+    comorbidity = models.ForeignKey('Comorbidity', null=True, blank=True, on_delete=models.SET_NULL)
+    age = models.IntegerField()
+    weight = models.IntegerField()
+    height = models.IntegerField()
+
+    def __str__(self):
+        return(self.name)
+
+    class Meta:
+        db_table = 'person'

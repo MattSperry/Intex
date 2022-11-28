@@ -13,10 +13,25 @@ def registerPageView(request):
             customer = form.save()
             login(request, customer)
             messages.success(request, "Registration Successful.")
-            return redirect("dashboard-index")
+            return redirect("dashboard-input")
         messages.error(request, "Unsuccessful registration. Invalid information.")
     form = UserForm()
     return render (request=request, template_name="dashboard/register.html", context={"register_form":form})
+
+def inputPageView(request):
+    data = Person.objects.all()
+    if request.method == 'POST':
+        form = IdeaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = IdeaForm()
+    context = {
+        'data': data,
+        'form': form,
+    }
+    return render(request, 'dashboard/input.html', context)
 
 def loginPageView(request):
 	if request.method == "POST":

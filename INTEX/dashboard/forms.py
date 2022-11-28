@@ -1,11 +1,11 @@
 from django import forms
-from .models import MovieData
+from .models import person
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
  
-class MovieDataForm(forms.ModelForm):
+class PersonForm(forms.ModelForm):
     class Meta:
-        model = MovieData
+        model = person
         fields = '__all__'
 
 class UserForm(UserCreationForm):
