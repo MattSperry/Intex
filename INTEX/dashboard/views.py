@@ -75,6 +75,6 @@ def journalPageView(request):
  
 def indexPageView(request):
     context = {
-        'currentPerson' : Person.objects.get(personID=request.user.id)
+        'currentPerson' : Person.objects.get(request.user.id)
     }
     return render(request, 'dashboard/index.html', context)
