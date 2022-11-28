@@ -13,7 +13,7 @@ def registerPageView(request):
             customer = form.save()
             login(request, customer)
             messages.success(request, "Registration Successful.")
-            return redirect("index")
+            return redirect("dashboard-index")
         messages.error(request, "Unsuccessful registration. Invalid information.")
     form = UserForm()
     return render (request=request, template_name="dashboard/register.html", context={"register_form":form})
@@ -28,7 +28,7 @@ def loginPageView(request):
 			if user is not None:
 				login(request, user)
 				messages.info(request, f"You are now logged in as {username}.")
-				return redirect("index")
+				return redirect("dashboard-index")
 			else:
 				messages.error(request,"Invalid username or password.")
 		else:
@@ -39,7 +39,7 @@ def loginPageView(request):
 def logoutPageView(request):
 	logout(request)
 	messages.info(request, "You have successfully logged out.") 
-	return redirect("index")
+	return redirect("dashboard-index")
  
 def indexPageView(request):
     data = MovieData.objects.all()
