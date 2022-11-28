@@ -26,7 +26,7 @@ def inputPageView(request):
         form = PersonForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/')
+            return redirect("dashboard-journal")
     else:
         form = PersonForm()
     context = {
@@ -45,7 +45,7 @@ def loginPageView(request):
 			if user is not None:
 				login(request, user)
 				messages.info(request, f"You are now logged in as {username}.")
-				return redirect("dashboard-index")
+				return redirect("dashboard-journal")
 			else:
 				messages.error(request,"Invalid username or password.")
 		else:
@@ -57,6 +57,21 @@ def logoutPageView(request):
 	logout(request)
 	messages.info(request, "You have successfully logged out.") 
 	return redirect("dashboard-index")
+
+def journalPageView(request):
+    data = Person.objects.all()
+    if request.method == 'POST':
+        form = PersonForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = PersonForm()
+    context = {
+        'data': data,
+        'form': form,
+    }
+    return render(request, 'dashboard/input.html', context)
  
 def indexPageView(request):
     context = {

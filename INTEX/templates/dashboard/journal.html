@@ -1,0 +1,17 @@
+{% extends 'partials/base.html' %} 
+{% load static %} 
+{% block content %}
+{% load crispy_forms_tags %}
+<h1>Daily Food Journal</h1>
+<br>
+<h3>Input Foods Eaten</3>
+<div class = "border p-3 shadow">
+    <h4>Add Data</h4>
+    <hr>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form|crispy}}
+        <input class = "btn btn-success btn-block" type='submit' value = 'Add'>
+    </form>
+</div>
+{% endblock %}

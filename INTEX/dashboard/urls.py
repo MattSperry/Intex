@@ -7,4 +7,5 @@ urlpatterns = [
     path("input/", inputPageView, name="dashboard-input"),
     path("login/", loginPageView, name="dashboard-login"),
     path("logout", logoutPageView, name= "dashboard-logout"),
+    path("journal/", journalPageView, name="dashboard-journal")
 ]
