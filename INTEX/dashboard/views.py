@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from .models import Person
-from .forms import MovieDataForm
+from .forms import UserForm, PersonForm
+from django.contrib.auth import login, authenticate, logout
+from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
+ 
  
 # Create your views here.
 def registerPageView(request):
@@ -18,12 +22,12 @@ def registerPageView(request):
 def inputPageView(request):
     data = Person.objects.all()
     if request.method == 'POST':
-        form = IdeaForm(request.POST)
+        form = PersonForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('/')
     else:
-        form = IdeaForm()
+        form = PersonForm()
     context = {
         'data': data,
         'form': form,
@@ -54,16 +58,5 @@ def logoutPageView(request):
 	return redirect("dashboard-index")
  
 def indexPageView(request):
-    data = MovieData.objects.all()
-    if request.method == 'POST':
-        form = MovieDataForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/')
-    else:
-        form = MovieDataForm()
-    context = {
-        'data': data,
-        'form': form,
-    }
-    return render(request, 'dashboard/index.html', context)
+    
+    return render(request, 'dashboard/index.html')

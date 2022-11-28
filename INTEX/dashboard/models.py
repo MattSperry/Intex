@@ -9,13 +9,15 @@ class Comorbidity(models.Model):
 
     class Meta:
         db_table = 'comorbidity'
+
 class Person(models.Model):
+    personID = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length = 30)
     last_name = models.CharField(max_length = 30)
     comorbidity = models.ForeignKey('Comorbidity', null=True, blank=True, on_delete=models.SET_NULL)
-    age = models.IntegerField()
-    weight = models.IntegerField()
-    height = models.IntegerField()
+    age = models.IntegerField(default=18)
+    weight = models.IntegerField(default=180)
+    height = models.IntegerField(default=72)
 
     def __str__(self):
         return(self.name)
