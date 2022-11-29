@@ -72,6 +72,9 @@ def journalPageView(request):
         'form': form,
     }
     return render(request, 'dashboard/journal.html', context)
+
+def suggestionsPageView(request):
+    return render(request, 'dashboard/suggestions.html')
  
 def indexPageView(request):
     context = {
