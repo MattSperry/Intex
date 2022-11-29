@@ -75,6 +75,10 @@ def journalPageView(request):
 
 def suggestionsPageView(request):
     return render(request, 'dashboard/suggestions.html')
+
+def updateInfoView(request):
+    first_name = request.GET(first_name)
+    
  
 def indexPageView(request):
     context = {
