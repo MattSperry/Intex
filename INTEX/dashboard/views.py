@@ -42,18 +42,18 @@ def profilePageView(request):
     }
     return render(request, "dashboard/profile.html", context)
 
-def updateInfoView(request, id):
+def updateInfoView(request):
     # dictionary for initial data with
     # field names as keys
     context ={}
     # fetch the object related to passed id
-    obj = get_object_or_404(PersonForm, id = id)
+    obj = get_object_or_404(Person)
     # pass the object as instance in form
     form = PersonForm(request.POST or None, instance = obj)
     # save the data from the form and
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect("/index"+id)
+        return HttpResponseRedirect("/index")
     # add form dictionary to context
     context["form"] = form
     return render(request, "dashboard/input.html", context)
@@ -115,7 +115,7 @@ def journalEntryAdd(request):
         new_entry.amount = request.POST['amount']
         new_entry.save()
 
-    return redirect('/')
+    return redirect('/index')
 
 
 
