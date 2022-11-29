@@ -1,0 +1,14 @@
+{% extends 'partials/base.html' %} 
+{% load static %} 
+{% block content %}
+{% load crispy_forms_tags %}
+<h1>{{info.first_name}} {{info.last_name}}</h1>
+<br>
+<a class="nav-link" href="{% url 'dashboard-update' info.personID %}">Update Personal Info</a>
+<div class = "border p-3 shadow">
+    <h4>Profile information</h4>
+    <p>Comorbidity: {{info.comorbidity}}</p>
+    <p>Date of Birth: {{info.date_of_birth}}</p>
+    <hr>
+</div>
+{% endblock %}

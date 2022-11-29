@@ -39,8 +39,8 @@ class Person(models.Model):
         db_table = 'person'
 
 class JournalEntry(models.Model):
-    person_id = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL)
-    journal_id = models.AutoField(primary_key=True)
+    personID = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL)
+    journalID = models.AutoField(primary_key=True)
     date_time_recorded = models.DateTimeField(default=datetime.now(), blank=True)
     date_time_eaten = models.DateTimeField()
     amount = models.DecimalField(max_digits=6, decimal_places=2)

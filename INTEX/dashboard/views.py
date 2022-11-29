@@ -33,7 +33,13 @@ def inputPageView(request):
         'data': data,
         'form': form,
     }
-    return render(request, 'dashboard/input.html', context)
+    return render(request, "dashboard/input.html", context)
+
+def profilePageView(request):
+    context = {
+        "info" : Person.objects.get(personID  = request.user.id)
+    }
+    return render(request, "dashboard/profile.html", context)
 
 def updateInfoView(request, id):
     # dictionary for initial data with
