@@ -74,4 +74,7 @@ def journalPageView(request):
     return render(request, 'dashboard/journal.html', context)
  
 def indexPageView(request):
-    return render(request, 'dashboard/index.html')
+    context = {
+        'currentUser': request.user
+    }
+    return render(request, 'dashboard/index.html', context)
