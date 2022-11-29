@@ -56,7 +56,7 @@ def loginPageView(request):
 def logoutPageView(request):
 	logout(request)
 	messages.info(request, "You have successfully logged out.") 
-	return redirect("dashboard-index")
+	return redirect("dashboard-login")
 
 def journalPageView(request):
     data = Person.objects.all()
