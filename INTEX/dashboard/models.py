@@ -39,7 +39,7 @@ class Person(models.Model):
         db_table = 'person'
 
 class JournalEntry(models.Model):
-    personID = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL)
+    personID = models.ForeignKey('auth.User', null=True, blank=True, on_delete=models.SET_NULL)
     journalID = models.AutoField(primary_key=True)
     date_time_recorded = models.DateTimeField(default=datetime.now(), blank=True)
     date_time_eaten = models.DateTimeField()
@@ -47,7 +47,7 @@ class JournalEntry(models.Model):
     food_name = models.CharField(max_length=20)
     
     def __str__(self):
-        return self.journal_id + " " + self.date_time_recorded
+        return str(self.journalID) + " " + str(self.date_time_recorded)
 
     class Meta:
         db_table = 'Journal Entry'

@@ -1,7 +1,10 @@
 from django.contrib import admin
-from .models import Person, Comorbidity
+from .models import Person, Comorbidity, Race, JournalEntry
  
 # Register your models here.
 admin.site.register(Person)
 admin.site.register(Comorbidity)
+admin.site.register(Race)
+admin.site.register(JournalEntry)
+
 

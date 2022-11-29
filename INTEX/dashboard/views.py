@@ -5,6 +5,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+import requests
  
  
 # Create your views here.
@@ -107,11 +108,17 @@ def indexPageView(request):
 def journalEntryAdd(request):
     if request.method == 'POST':
         new_entry = JournalEntry()
-        food_name = request.POST.get(food_name)
-        new_entry.food_name = food_name
+        person = Person.objects.get(personID = request.user.id)
+        new_entry.personID = person.personID
+        new_entry.date_time_eaten = request.POST['dateTime']
+        new_entry.food_name = request.POST['food_name']
+        new_entry.amount = request.POST['amount']
         new_entry.save()
 
     return redirect('/')
+
+
+
 
     
 

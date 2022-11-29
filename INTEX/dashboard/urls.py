@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import *
+from .views import loginPageView, indexPageView, registerPageView, inputPageView, profilePageView, updateInfoView, logoutPageView, journalPageView, suggestionsPageView, journalEntryAdd
  
 urlpatterns = [
     path("", loginPageView, name="dashboard-login"),
@@ -12,4 +12,5 @@ urlpatterns = [
     path("journal/", journalPageView, name="dashboard-journal"),
     path("suggestions/", suggestionsPageView, name="dashboard-suggestions"),
     path('addJournalEntry/', journalEntryAdd, name='journalEntryAdd'),
+
     ]

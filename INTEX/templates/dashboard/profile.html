@@ -7,8 +7,13 @@
 <a class="nav-link" href="{% url 'dashboard-update' info.personID %}">Update Personal Info</a>
 <div class = "border p-3 shadow">
     <h4>Profile information</h4>
+    <p>Username: {{info.personID}}</p>
     <p>Comorbidity: {{info.comorbidity}}</p>
     <p>Date of Birth: {{info.date_of_birth}}</p>
+    <p>Weight: {{info.weight}}</p>
+    <p>Height: {{info.height}}</p>
+    <p>Gender: {{info.gender}}</p>
+    <p>Race: {{info.race}}</p>
     <hr>
 </div>
 {% endblock %}
