@@ -43,20 +43,8 @@ def profilePageView(request):
     return render(request, "dashboard/profile.html", context)
 
 def updateInfoView(request):
-    # dictionary for initial data with
-    # field names as keys
-    context ={}
-    # fetch the object related to passed id
-    obj = get_object_or_404(Person)
-    # pass the object as instance in form
-    form = PersonForm(request.POST or None, instance = obj)
-    # save the data from the form and
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect("/index")
-    # add form dictionary to context
-    context["form"] = form
-    return render(request, "dashboard/input.html", context)
+    personID = request.POST["info.personID"]
+    return render(request, "dashboard/input.html")
 
 def loginPageView(request):
 	if request.method == "POST":

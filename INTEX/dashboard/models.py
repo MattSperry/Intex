@@ -40,6 +40,7 @@ class Person(models.Model):
 
 class JournalEntry(models.Model):
     personID = models.ForeignKey('auth.User', null=True, blank=True, on_delete=models.SET_NULL)
+    food_name = models.ForeignKey('Food', on_delete=models.SET_NULL)
     journalID = models.AutoField(primary_key=True)
     date_time_recorded = models.DateTimeField(default=datetime.now(), blank=True)
     date_time_eaten = models.DateTimeField()
@@ -51,6 +52,24 @@ class JournalEntry(models.Model):
 
     class Meta:
         db_table = 'Journal Entry'
+
+class Food(models.Model):
+    food_name = models.CharField(max_length=100, primary_key=True)
+    serving_size = models.DecimalField(max_digits=6, decimal_places=2, default=1.0)
+    units = models.CharField(max_length=50)
+    potassium = models.DecimalField(max_digits=6, decimal_places=2)
+    phosphorus = models.DecimalField(max_digits=6, decimal_places=2)
+    sodium = models.DecimalField(max_digits=6, decimal_places=2)
+    calcium = models.DecimalField(max_digits=6, decimal_places=2)
+    protein = models.DecimalField(max_digits=6, decimal_places=2)
+    sugar = models.DecimalField(max_digits=6, decimal_places=2)
+    class Meta:
+        db_table = 'Food'
+
+    def __str__(self):
+        return self.food_name
+
+
 
 
     
