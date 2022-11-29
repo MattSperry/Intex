@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'polarbear',
-        'HOST': 'intex-django-database.cxe2a72dh53h.us-west-2.rds.amazonaws.com',
+        'HOST': 'intex-django.cxe2a72dh53h.us-west-2.rds.amazonaws.com',
         'PORT': '5432',
     }
 }

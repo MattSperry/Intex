@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from .models import Person
+from django.shortcuts import get_object_or_404, render, redirect, HttpResponseRedirect
+from .models import Person, JournalEntry
 from .forms import UserForm, PersonForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -34,6 +34,22 @@ def inputPageView(request):
         'form': form,
     }
     return render(request, 'dashboard/input.html', context)
+
+def updateInfoView(request, id):
+    # dictionary for initial data with
+    # field names as keys
+    context ={}
+    # fetch the object related to passed id
+    obj = get_object_or_404(PersonForm, id = id)
+    # pass the object as instance in form
+    form = PersonForm(request.POST or None, instance = obj)
+    # save the data from the form and
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect("/index"+id)
+    # add form dictionary to context
+    context["form"] = form
+    return render(request, "dashboard/input.html", context)
 
 def loginPageView(request):
 	if request.method == "POST":
@@ -76,12 +92,20 @@ def journalPageView(request):
 def suggestionsPageView(request):
     return render(request, 'dashboard/suggestions.html')
 
-def updateInfoView(request):
-    first_name = request.GET(first_name)
-    
- 
 def indexPageView(request):
     context = {
         'currentUser': Person.objects.get(personID  = request.user.id)
     }
     return render(request, 'dashboard/index.html', context)
+
+def journalEntryAdd(request):
+    if request.method == 'POST':
+        new_entry = JournalEntry()
+        food_name = request.POST.get(food_name)
+        new_entry.food_name = food_name
+        new_entry.save()
+
+    return redirect('/')
+
+    
+

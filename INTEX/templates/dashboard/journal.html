@@ -7,10 +7,11 @@
 <div class = "border p-3 shadow">
     <h4>Input Foods Eaten</h4>
     <hr>
-    <form method="POST">
+    <form method="POST" action="{% url 'jounalEntryAdd'%}" name="form">
         {% csrf_token %}
-        {{ form|crispy}}
-        <input class = "btn btn-success btn-block" type='submit' value = 'Add'>
+        <label for="food_name">Food Name:</label>
+        <input type="text" name="food_name" maxlength="20">
+        <button class = "btn btn-success btn-block" type='submit'>
     </form>
 </div>
 {% endblock %}
