@@ -10,23 +10,12 @@
       <h4>Welcome, {{currentUser.first_name}} {{currentUser.last_name}}!</h4>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/logout">Logout</a>
-    </li>
-    <br>
-    <li class="nav-item">
       <a class="nav-link" href="{% url 'dashboard-profile' %}">View Profile</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{% url 'dashboard-journal' %}">Meal Entry</a>
+      <a class="nav-link" href="/logout">Logout</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'dashboard-suggestions' %}">Dietary Tips</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'entries' %}">Journal Entries</a>
-    </li>
-
-    {% else %}
+       {% else %}
 
     <li class="nav-item">
       <a class="nav-link" href="/login">Login</a>

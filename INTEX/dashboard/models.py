@@ -26,10 +26,10 @@ class Person(models.Model):
     first_name = models.CharField(max_length = 30)
     last_name = models.CharField(max_length = 30)
     comorbidity = models.ForeignKey('Comorbidity', null=True, blank=True, on_delete=models.SET_NULL)
-    date_of_birth = models.DateField(default=datetime.now())
+    date_of_birth = models.DateField(default=django.utils.timezone.now)
     weight = models.IntegerField()
     height = models.IntegerField()
-    gender = models.BinaryField() # change to str to see if it fixes the error
+    gender = models.CharField(max_length=30, default="Select")
     race = models.ForeignKey('Race', null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):

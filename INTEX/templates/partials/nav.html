@@ -13,6 +13,15 @@
                 <li class="nav-item active">
                 <a class="nav-link" href="{% url 'dashboard-index' %}">Home <span class="sr-only">(current)</span></a>
                 </li>
+                <li class="nav-item active">
+                <a class="nav-link" href="{% url 'dashboard-journal' %}">Meal Entry<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                <a class="nav-link" href="{% url 'dashboard-suggestions' %}">Dietary Tips<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                <a class="nav-link" href="{% url 'entries' %}">Journal Entries<span class="sr-only">(current)</span></a>
+                </li>
                 {% endif %}
             </ul>
         </div>

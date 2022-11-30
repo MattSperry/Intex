@@ -4,14 +4,15 @@
 <h1><b>Journal Entries for {{currentUser.first_name}} {{currentUser.last_name}}</b></h1>
     <div class="container">
         {% for entries in journal_entries %}
-        <p>
-            {{ entries.personID }}
-            {{ entries.journalID }}
-            {{ entries.date_time_recorded }}
-            {{ entries.date_time_eaten }}
-            {{ entries.amount }}
-            {{ entries.food_name }}
-            </p>  
+            {%if request.user.id==entries.personID:%}  
+            <p>
+                {{ entries.personID }}
+                {{ entries.journalID }}
+                {{ entries.date_time_recorded }}
+                {{ entries.date_time_eaten }}
+                {{ entries.amount }}
+                {{ entries.food_name }}
+                </p>  
         {% endfor %} 
     </div>
 {% endblock %}  

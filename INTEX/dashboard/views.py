@@ -110,7 +110,7 @@ def suggestionsPageView(request):
 
 def indexPageView(request):
     context = {
-        'currentUser': Person.objects.get(personID  = request.user.id)
+        'currentUser': Person.objects.get(personID = request.user.id)
     }
     return render(request, 'dashboard/index.html', context)
 
@@ -124,7 +124,7 @@ def journalEntryAdd(request):
         new_entry.amount = request.POST['amount']
         new_entry.save()
 
-        if len(Food.objects.get(food_name = request.POST['food_name'])) <= 0:
+        if Food.objects.get(food_name = request.POST['food_name']) == None:
             new_food = Food()
 
             new_food.food_name = request.POST['food_name']
@@ -146,25 +146,27 @@ def journalEntryAdd(request):
             response = requests.request("GET", url, headers=headers, data=payload)
             json_response = response.json()
 
-            phosphorus = json_response['foods'][0]['foodNutrients'][2] # Phosphorus
-            potassium = json_response['foods'][0]['foodNutrients'][3] # Potassium
-            sodium = json_response['foods'][0]['foodNutrients'][4] # Sodium
-            sugar = json_response['foods'][0]['foodNutrients'][11] # Sugars
-            calcium = json_response['foods'][0]['foodNutrients'][24] # Calcium
-            protein = json_response['foods'][0]['foodNutrients'][25] # Protein
+            if len(response.json()['foods']) > 0:
 
-            if len(json_response['foods'][0]['foodMeasures']) <= 0:
-                new_food.serving_size = 100
-                new_food.units = 'g'
+                phosphorus = json_response['foods'][0]['foodNutrients'][2] # Phosphorus
+                potassium = json_response['foods'][0]['foodNutrients'][3] # Potassium
+                sodium = json_response['foods'][0]['foodNutrients'][4] # Sodium
+                sugar = json_response['foods'][0]['foodNutrients'][11] # Sugars
+                calcium = json_response['foods'][0]['foodNutrients'][24] # Calcium
+                protein = json_response['foods'][0]['foodNutrients'][25] # Protein
 
-            new_food.potassium = potassium['value']
-            new_food.phosphorus = phosphorus['value']
-            new_food.sodium = sodium['value']
-            new_food.calcium = calcium['value']
-            new_food.protein = protein['value']
-            new_food.sugar = sugar['value']
+                if len(json_response['foods'][0]['foodMeasures']) <= 0:
+                    new_food.serving_size = 100
+                    new_food.units = 'g'
 
-            new_food.save()
+                new_food.potassium = potassium['value']
+                new_food.phosphorus = phosphorus['value']
+                new_food.sodium = sodium['value']
+                new_food.calcium = calcium['value']
+                new_food.protein = protein['value']
+                new_food.sugar = sugar['value']
+
+                new_food.save()
 
     return redirect('/index')
 
@@ -187,10 +189,22 @@ def foodSearch(request):
     response = requests.request("GET", url, headers=headers, data=payload)
     json_response = response.json()
 
-    food_array = []
-    for food in json_response['foods']:
-        food_array.append(food['description'])
+    if Food.objects.get(food_name = request.POST['search']) == None:
+        food_array = []
+        if len(response.json()['foods']) > 0:
+            for food in json_response['foods']:
+                food_array.append(food['description'])
+    else:
+        food_array = []
 
+        for food in Food.objects.get(food_name = request.POST['search']):
+            food_array.append(food)
+
+        if len(response.json()['foods']) > 0:
+
+            for food in json_response['foods']:
+                if food['description'] not in food_array:
+                    food_array.append(food['description'])
 
     context = {
         'food_names' : food_array
