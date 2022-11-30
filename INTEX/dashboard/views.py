@@ -124,37 +124,47 @@ def journalEntryAdd(request):
         new_entry.amount = request.POST['amount']
         new_entry.save()
 
-        """new_food = Food()
+        if len(Food.objects.get(food_name = request.POST['food_name'])) <= 0:
+            new_food = Food()
 
-        new_food.food_name = request.POST['food_name']
+            new_food.food_name = request.POST['food_name']
+            
+            query = request.POST['food_name']
+            dataType = 'Foundation'
+            pageSize = 10
+            pageNumber = 1
+            api_key = 'F92KbXwQwUXrteSO6PpQ7zocfxkkrt5inVeLVwqI'
 
-        query = request.POST['food_name']
-        dataType = 'Foundation'
-        pageSize = 10
-        pageNumber = 1
-        api_key = 'F92KbXwQwUXrteSO6PpQ7zocfxkkrt5inVeLVwqI'
-
-        url = "https://api.nal.usda.gov/fdc/v1/foods/search?query=" + query + "&dataType=" + dataType + "&pageSize=" + str(pageSize) + "&pageNumber=" + str(pageNumber) + "&api_key=" + api_key
+            url = "https://api.nal.usda.gov/fdc/v1/foods/search?query=" + query + "&dataType=" + dataType + "&pageSize=" + str(pageSize) + "&pageNumber=" + str(pageNumber) + "&api_key=" + api_key
 
 
-        payload={}
-        headers = {
-        'Cookie': 'ApplicationGatewayAffinity=5164bd01bfd5c519ce1bd2870a3ce176; ApplicationGatewayAffinityCORS=5164bd01bfd5c519ce1bd2870a3ce176'
-        }
+            payload={}
+            headers = {
+            'Cookie': 'ApplicationGatewayAffinity=5164bd01bfd5c519ce1bd2870a3ce176; ApplicationGatewayAffinityCORS=5164bd01bfd5c519ce1bd2870a3ce176'
+            }
 
-        response = requests.request("GET", url, headers=headers, data=payload)
-        json_response = response.json()
+            response = requests.request("GET", url, headers=headers, data=payload)
+            json_response = response.json()
 
-        new_food.serving_size = 
-        new_food.units = request.POST['units']
-        new_food.potassium = request.POST['potassium']
-        new_food.phosphorus = request.POST['phosphorus']
-        new_food.sodium = request.POST['sodium']
-        new_food.calcium = request.POST['calcium']
-        new_food.protein = request.POST['protein']
-        new_food.sugar = request.POST['sugar']
+            phosphorus = json_response['foods'][0]['foodNutrients'][2] # Phosphorus
+            potassium = json_response['foods'][0]['foodNutrients'][3] # Potassium
+            sodium = json_response['foods'][0]['foodNutrients'][4] # Sodium
+            sugar = json_response['foods'][0]['foodNutrients'][11] # Sugars
+            calcium = json_response['foods'][0]['foodNutrients'][24] # Calcium
+            protein = json_response['foods'][0]['foodNutrients'][25] # Protein
 
-        new_food.save()"""
+            if len(json_response['foods'][0]['foodMeasures']) <= 0:
+                new_food.serving_size = 100
+                new_food.units = 'g'
+
+            new_food.potassium = potassium['value']
+            new_food.phosphorus = phosphorus['value']
+            new_food.sodium = sodium['value']
+            new_food.calcium = calcium['value']
+            new_food.protein = protein['value']
+            new_food.sugar = sugar['value']
+
+            new_food.save()
 
     return redirect('/index')
 
@@ -208,6 +218,16 @@ def addFoodItemEntry(request):
         new_food.save()
 
     return render(request, 'dashboard/journal.html')
+
+
+def entriesPageView(request) :
+    data = JournalEntry.objects.all()
+
+    context = {
+        "journal_entries" : data,
+        'currentUser': Person.objects.get(personID  = request.user.id)
+    }
+    return render(request, 'dashboard/entries.html', context)
 
 
     

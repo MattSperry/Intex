@@ -28,7 +28,7 @@
     <form method="POST" action="{% url 'journalEntryAdd'%}" name="form">
         {% csrf_token %}
         <label for="food_name">Food Name:</label>
-        <input type="text" name="food_name" maxlength="20" placeholder="Use the food item name above">
+        <input type="text" name="food_name" maxlength="50" placeholder="Use the food item name above">
         <label for="dateTime">Time Eaten:</label>
         <input type="datetime-local" name="dateTime">
         <label for="amount">Amount:</label>

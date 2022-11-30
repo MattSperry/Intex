@@ -26,7 +26,7 @@ class Person(models.Model):
     first_name = models.CharField(max_length = 30)
     last_name = models.CharField(max_length = 30)
     comorbidity = models.ForeignKey('Comorbidity', null=True, blank=True, on_delete=models.SET_NULL)
-    date_of_birth = models.DateField(default=django.utils.timezone.now)
+    date_of_birth = models.DateField(default=datetime.now())
     weight = models.IntegerField()
     height = models.IntegerField()
     gender = models.BinaryField()
@@ -45,7 +45,7 @@ class JournalEntry(models.Model):
     date_time_recorded = models.DateTimeField(default=datetime.now(), blank=True)
     date_time_eaten = models.DateTimeField()
     amount = models.DecimalField(max_digits=6, decimal_places=2)
-    food_name = models.CharField(max_length=20)
+    food_name = models.CharField(max_length=100)
     
     def __str__(self):
         return str(self.journalID) + " " + str(self.date_time_recorded)
