@@ -18,6 +18,9 @@
             <li> {{ name }} </li>
         {% endfor %}
         </ul>
+        <p> If your food item is not listed, feel free to add it to the database</p>
+        <a class="btn-primary btn" href="{% url 'addFoodItem' %}"> Add Food Item </a>
+
     {% else %}
         <p> you have not searched a food, or your food item is not in the database</p>
     {% endif %}

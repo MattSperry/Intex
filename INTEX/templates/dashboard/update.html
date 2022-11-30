@@ -8,31 +8,39 @@
 <div class = "border p-3 shadow">
     <h4>Add Data</h4>
     <hr>
-    <form name="form" method="POST" action="{% url 'dashboard-profile' %}">
+    <form name="form" method="POST" action="{% url 'update-person-info' %}">
         {% csrf_token %}
         <label for="first_name">First Name:</label>
-        <input class = "btn btn-success btn-block" value="{{info.first_name}}" type='text'>
+        <input class = "btn btn-success btn-block" value="{{info.first_name}}" type='text' name="first_name">
         <br>
         <label for="last_name">Last Name:</label>
-        <input class = "btn btn-success btn-block" value="{{info.last_name}}" type='text'>
+        <input class = "btn btn-success btn-block" value="{{info.last_name}}" type='text' name="last_name">
         <br>
         <label for="comorbidity">Comorbidity:</label>
-        <input class = "btn btn-success btn-block" value="{{info.comorbity}}" type='text'>
+        <select class = "btn btn-success btn-block" value={{info.comorbidity}} name="comorbidity">
+            {% for comorbidity in comorbidities%}
+            <option value="{{comorbidity}}">{{comorbidity}}</option>
+            {% endfor %}
+        </select>
         <br>
         <label for="date_of_birth">Date of Birth:</label>
-        <input class = "btn btn-success btn-block" value="{{info.date_of_birth}}" type='datetime'>
+        <input class = "btn btn-success btn-block" value="{{info.date_of_birth|date:"Y%-%m-%d"}}" type='date' name="date_of_birth">
         <br>
         <label for="weight">Weight:</label>
-        <input class = "btn btn-success btn-block" value="{{info.weight}}" type='number'>
+        <input class = "btn btn-success btn-block" value="{{info.weight}}" type='number' name="weight">
         <br>
         <label for="height">Height:</label>
-        <input class = "btn btn-success btn-block" value="{{info.height}}" type='number'>
+        <input class = "btn btn-success btn-block" value="{{info.height}}" type='number' name="height">
         <br>
         <label for="gender">Gender:</label>
-        <input class = "btn btn-success btn-block" value="{{info.gender}}" type='number' min = 0 max = 1>
+        <input class = "btn btn-success btn-block" value="{{info.gender}}" type='number' min = 0 max = 1 name="gender">
         <br>
         <label for="race">Race:</label>
-        <input class = "btn btn-success btn-block" value="{{info.race}}" type='text'>
+        <select class = "btn btn-success btn-block" value={{info.race}} name="race">
+            {% for race in races%}
+            <option value="{{race}}">{{race}}</option>
+            {% endfor %}
+        </select>
         <br>
         <button type='submit'>Submit</button>
     </form>
