@@ -1,0 +1,41 @@
+{% extends 'partials/base.html' %} 
+{% load static %} 
+{% block content %}
+{% load crispy_forms_tags %}
+<h1>Update Info</h1>
+<p>*Please add this data to get the correct dietary recomendations</p>
+<br>
+<div class = "border p-3 shadow">
+    <h4>Add Data</h4>
+    <hr>
+    <form name="form" method="POST" action="{% url 'dashboard-profile' %}">
+        {% csrf_token %}
+        <label for="first_name">First Name:</label>
+        <input class = "btn btn-success btn-block" value="{{info.first_name}}" type='text'>
+        <br>
+        <label for="last_name">Last Name:</label>
+        <input class = "btn btn-success btn-block" value="{{info.last_name}}" type='text'>
+        <br>
+        <label for="comorbidity">Comorbidity:</label>
+        <input class = "btn btn-success btn-block" value="{{info.comorbity}}" type='text'>
+        <br>
+        <label for="date_of_birth">Date of Birth:</label>
+        <input class = "btn btn-success btn-block" value="{{info.date_of_birth}}" type='datetime'>
+        <br>
+        <label for="weight">Weight:</label>
+        <input class = "btn btn-success btn-block" value="{{info.weight}}" type='number'>
+        <br>
+        <label for="height">Height:</label>
+        <input class = "btn btn-success btn-block" value="{{info.height}}" type='number'>
+        <br>
+        <label for="gender">Gender:</label>
+        <input class = "btn btn-success btn-block" value="{{info.gender}}" type='number' min = 0 max = 1>
+        <br>
+        <label for="race">Race:</label>
+        <input class = "btn btn-success btn-block" value="{{info.race}}" type='text'>
+        <br>
+        <button type='submit'>Submit</button>
+    </form>
+</div>
+
+{% endblock %}

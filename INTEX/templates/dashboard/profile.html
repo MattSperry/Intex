@@ -4,7 +4,7 @@
 {% load crispy_forms_tags %}
 <h1>{{info.first_name}} {{info.last_name}}</h1>
 <br>
-<a class="nav-link" href="{% url 'dashboard-update' info.personID %}">Update Personal Info</a>
+<a class="nav-link" href="{% url 'dashboard-update' %}">Update Personal Info</a>
 <div class = "border p-3 shadow">
     <h4>Profile information</h4>
     <p>Username: {{info.personID}}</p>

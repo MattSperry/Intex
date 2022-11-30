@@ -6,15 +6,30 @@
 <br>
 <div class = "border p-3 shadow">
     <h4>Input Foods Eaten</h4>
-    <hr>
+    <form method="POST" action="{% url 'foodSearch' %}" name="search">
+        {% csrf_token %}
+        <input type="text" name="search" placeholder="Search for a food here">
+        <button class = "btn btn-success btn-block" type='submit'>Submit</button>
+    </form>
+    <br>
+    {% if food_names %}
+        <ul>
+        {% for name in food_names %}
+            <li> {{ name }} </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p> you have not searched a food, or your food item is not in the database</p>
+    {% endif %}
+
     <form method="POST" action="{% url 'journalEntryAdd'%}" name="form">
         {% csrf_token %}
         <label for="food_name">Food Name:</label>
-        <input type="text" name="food_name" maxlength="20">
+        <input type="text" name="food_name" maxlength="20" placeholder="Use the food item name above">
         <label for="dateTime">Time Eaten:</label>
         <input type="datetime-local" name="dateTime">
         <label for="amount">Amount:</label>
-        <input type="number" name="amount" step="any">
+        <input type="number" name="amount" step=0.01>
         <button class = "btn btn-success btn-block" type='submit'>Submit</button>
     </form>
 </div>

@@ -43,8 +43,26 @@ def profilePageView(request):
     return render(request, "dashboard/profile.html", context)
 
 def updateInfoView(request):
-    personID = request.POST["info.personID"]
-    return render(request, "dashboard/input.html")
+
+    context = {
+        "info" : Person.objects.get(personID  = request.user.id)
+    }
+    return render(request, "dashboard/update.html", context)
+
+def updateDataView(request):
+    person = Person.objects.get(personID=request.user.id)
+
+    person.first_name = request.POST["first_name"]
+    person.last_name = request.POST["last_name"]
+    person.comorbidity = request.POST["comorbidity"]
+    person.date_of_birth = request.POST["date_of_birth"]
+    person.weight = request.POST["weight"]
+    person.height = request.POST["height"]
+    person.gender = request.POST["gender"]
+    person.race = request.POST["race"]
+    
+    person.save()
+    return updateInfoView(request)
 
 def loginPageView(request):
 	if request.method == "POST":
@@ -104,6 +122,36 @@ def journalEntryAdd(request):
         new_entry.save()
 
     return redirect('/index')
+
+def foodSearch(request):
+
+    query = request.POST['search']
+    dataType = 'Foundation'
+    pageSize = 10
+    pageNumber = 1
+    api_key = 'F92KbXwQwUXrteSO6PpQ7zocfxkkrt5inVeLVwqI'
+
+    url = "https://api.nal.usda.gov/fdc/v1/foods/search?query=" + query + "&dataType=" + dataType + "&pageSize=" + str(pageSize) + "&pageNumber=" + str(pageNumber) + "&api_key=" + api_key
+
+
+    payload={}
+    headers = {
+    'Cookie': 'ApplicationGatewayAffinity=5164bd01bfd5c519ce1bd2870a3ce176; ApplicationGatewayAffinityCORS=5164bd01bfd5c519ce1bd2870a3ce176'
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+    json_response = response.json()
+
+    food_array = []
+    for food in json_response['foods']:
+        food_array.append(food['description'])
+
+
+    context = {
+        'food_names' : food_array
+    }
+
+    return render(request, 'dashboard/journal.html', context)
 
 
 
