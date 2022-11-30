@@ -29,7 +29,7 @@ class Person(models.Model):
     date_of_birth = models.DateField(default=datetime.now())
     weight = models.IntegerField()
     height = models.IntegerField()
-    gender = models.BinaryField()
+    gender = models.BinaryField() # change to str to see if it fixes the error
     race = models.ForeignKey('Race', null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
