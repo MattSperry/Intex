@@ -6,11 +6,10 @@
 <br>
 <div class = "border p-3 shadow">
     <h4>Input Foods Eaten</h4>
-    <br>
-    <form method="POST" action="{% url 'foodSearch' %}" name="search">
+    <form method="POST" action="{% url 'food-search-update-journal' currentEntry.journalID %}" name="search">
         {% csrf_token %}
-        <input type="text" name="search" placeholder="To look for new food">
-        <button class = "btn btn-success btn-block" type='submit'>Submit</button>
+        <input type="text" name="search" placeholder="Search for a food here">
+        <button class = "btn btn-primary" type='submit'>Search</button>
     </form>
     <br>
     {% if food_names %}
@@ -32,18 +31,24 @@
         <p> You have not searched a food, or your food item is not in the database</p>
     {% endif %}
 
-    <form method="POST" action="{% url 'update-journal-entry' %}" name="form">
+    <form method="POST" action="{% url 'update-journal-entry'%}" name="form">
         {% csrf_token %}
+        {{currentEntry.journalID}}
         <input type="hidden" value="{{currentEntry.journalID}}" name="journalid">
         <label for="food_name">Food Name:</label>
-        <input type="text" name="food_name" maxlength="200" value="{{currentEntry.food_name}}"><br>
+        <select type="select" name="food_name" maxlength="200">
+            <option disabled selected hidden>{{currentEntry.food_name}}</option>
+            {% for i in food_names %}
+            <option>{{ i }}</option>
+            {% endfor %}
+        </select><br>
         <label for="date">Date Eaten:</label>
         <input type="date" name="date" value="{{currentEntry.date_recorded}}"><br>
         <label for="time">Time Eaten:</label>
         <input type="time" name="time" value="{{currentEntry.time_recorded}}"><br>
         <label for="amount">Amount (based on serving size):</label>
         <input type="number" name="amount" step=0.5 value="{{currentEntry.amount}}"><br>
-        <button class = "btn btn-success btn-block" type='submit'>Submit</button>
+        <button class = "btn btn-primary" type='submit'>Submit</button>
     </form>
 </div>
 {% endblock %}

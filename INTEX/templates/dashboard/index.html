@@ -3,47 +3,171 @@
 {%block content %}
 {% load crispy_forms_tags %}
 <script
-  src="https://code.jquery.com/jquery-3.6.1.min.js"
-  integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
-  crossorigin="anonymous"></script>
+src="https://code.jquery.com/jquery-3.6.1.min.js"
+integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+crossorigin="anonymous"></script>
 <script type="text/javascript">
-  $(document).ready(function() {
-      $(function() {
-          $( "#some_flag" ).dialog({
-              modal: true,
-              closeOnEscape: false,
-              dialogClass: "no-close",
-              resizable: false,
-              draggable: false,
-              width: 800,
-              buttons: [
-                  {
-                      text: "OK",
-                      click: function() {
-                      $( this ).dialog( "close" );
-                      }
-                  }
-              ]
-          });
-      });
-  });
-  $(document).ready(function(){
-
-    $("#some_flag").on("click", function(){
-          $("#some_flag").hide();
+$(document).ready(function() {
+    $(function() {
+        $( "#some_flag" ).dialog({
+            modal: true,
+            closeOnEscape: false,
+            dialogClass: "no-close",
+            resizable: false,
+            draggable: false,
+            width: 800,
+            buttons: [
+                {
+                    text: "OK",
+                    click: function() {
+                    $( this ).dialog( "close" );
+                    }
+                }
+            ]
+        });
     });
-
+    $("#some_flag").on("click", function(){
+        $("#some_flag").hide();
   });
+});
 </script>
 {% if alerts %}
     <div id="some_flag" title="Some Flag" style="background-color: red; text-align: center;">
         <p style="color:white;">Warning! Your {{alerts}} levels are too high! See dietary tips.        (X)</p>
     </div>
 {% endif %}
-<div class="row mt-3 pt-3" style="float:; margin-left:auto; margin-top: 3.0em;">
+<!--CSS-->
+<style> 
+  #example2 {
+    border: 1px solid;
+    padding: 10px;
+    box-shadow: 3px 6px #999999;
+  }
+  @import url(https://fonts.googleapis.com/css?family=Lato:400,700,900,300);
+
+h1 { font-size: 32px; }
+h2 { font-size: 26px; }
+h3 { font-size: 18px; }
+p { margin: 0 0 15px; line-height: 24px; color: gainsboro; }
+a { color: dodgerblue; text-decoration: none; border-bottom: 1px dotted; }
+a:hover { color: tomato; }
+
+.container { 
+  max-width: 960px; 
+  height: 100%;
+  margin: 0 auto; 
+  padding: 20px;
+}
+
+/* ------------------- */
+/* PEN STYLES      -- */
+/* ----------------- */
+
+/* MAKE IT CUTE ----- */
+.tabs {
+  position: relative;
+  display: flex;
+  min-height: 800px;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+
+.tabby-tab {
+  flex: 1;
+}
+
+.tabby-tab label {
+  display: block;
+  box-sizing: border-box;
+  /* tab content must clear this */
+    height: 40px;
+  
+  padding: 10px;
+  text-align: center;
+  background:#7BA0AB;
+  cursor: pointer;
+  transition: background 0.5s ease;
+  
+}
+
+.tabby-tab label:hover {
+  background:#4F808F;
+}
+
+.tabby-content {
+  position: absolute;
+  
+  left: 0; bottom: 0; right: 0;
+  /* clear the tab labels */
+    top: 40px; 
+  
+  padding: 20px;
+  border-radius: 0 0 8px 8px;
+  background: #BDCFD5;
+  
+  transition: 
+    opacity 0.8s ease,
+    transform 0.8s ease   ;
+  
+  /* show/hide */
+    opacity: 0;
+    transform: scale(0.1);
+    transform-origin: top left;
+  
+}
+
+.tabby-content img {
+  float: left;
+  margin-right: 20px;
+  border-radius: 8px;
+}
+
+
+/* MAKE IT WORK ----- */
+
+.tabby-tab [type=radio] { display: none; }
+[type=radio]:checked ~ label {
+  background: #BDCFD5;
+  z-index: -3;
+}
+
+[type=radio]:checked ~ label ~ .tabby-content {
+  z-index: -2;
+  
+  /* show/hide */
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* BREAKPOINTS ----- */
+@media screen and (max-width: 767px) {
+  .tabs { min-height: 400px;}
+}
+
+@media screen and (max-width: 480px) {
+  .tabs { min-height: 580px; }
+  .tabby-tab label { 
+    height: 60px;
+  }
+  .tabby-content { top: 60px; }
+  .tabby-content img {
+    float: none;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+}
+</style>
+
+{% if alerts %}
+    <div id="some_flag" title="Some Flag" style="background-color: red; text-align: center;">
+        <p style="color:white;">Warning! Your {{alerts}} levels are too high! See dietary tips.        (X)</p>
+    </div>
+{% endif %}
+<div class="row mt-3 pt-3" style="margin-left: 4.0em;">
+  <div class="col-md-4">
   <ul class="navbar-nav mr-auto">
     {% if user.is_authenticated %}
-    
+    <br>
     <li class="nav-item">
       <h4>Welcome, <b>{{currentUser.first_name}} {{currentUser.last_name}}</b>!</h4>
     </li>
@@ -53,6 +177,22 @@
     <li class="nav-item">
       <a class="nav-link" href="/logout">Logout</a>
     </li>
+    <br><br><br>
+    <li class="nav-item">
+      <h4>Other Resources</h4>
+    </li>
+    <li class="nav-item" id="example2">
+      <h3>Read more about kidney care and kidney-friendly recipes <a href="https://www.davita.com/diet-nutrition/recipes">here</a></h3>
+    </li>
+    <br>
+    <li class="nav-item" id="example2">
+      <iframe width="420" height="236.25" src="https://www.youtube.com/embed/18acCcMwKDw?controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </li>
+    <br>
+    <li class="nav-item" id="example2">
+      <p>test</p>
+    </li>
+
     {% else %}
 
     <li class="nav-item">
@@ -61,17 +201,42 @@
 
     {% endif %}
   </ul>
-
+</div>
 
   <div class="col-md-8">
-    <canvas id="barchart" width="400" height="300"></canvas>
-  </div>
-
-  <div class="col-md-8" style="float:right; margin-left:auto; margin-top: 3.0em;">
-    <canvas id="timeline" width="400" height="300"  ></canvas>
-  </div>
-
+    <div class="container">
+      <div class="tabs">
+        <div class="tabby-tab" >
+          <input type="radio" id="tab-1" name="tabby-tabs" checked>
+          <label for="tab-1" style="color: white">Daily View</label>
+          <div class="tabby-content">
+            <canvas id="barchart" width="400" height="300"></canvas>
+          </div>
+        </div>
+    
+        <div class="tabby-tab" >
+          <input type="radio" id="tab-2" name="tabby-tabs">
+          <label for="tab-2" style="color: white">Weekly View</label>
+          <div class="tabby-content">
+            <canvas id="timeline" width="400" height="300"  ></canvas>
+          </div>
+        </div>
+        
+      </div>
+</div>
  <script>
+
+  const plugin = {
+    id: 'customCanvasBackgroundColor',
+    beforeDraw: (chart, args, options) => {
+      const {ctx} = chart;
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-over';
+      ctx.fillStyle = options.color || '#99ffff';
+      ctx.fillRect(0, 0, chart.width, chart.height);
+      ctx.restore();
+    }
+  };
     //bar data
       const data = {
         labels: [{% for data in names %} '{{data}}', {% endfor %}],
@@ -81,12 +246,12 @@
               label: "Daily Nutient Intake",
               data: [{% for data in totals %} {{data}}, {% endfor %}],
               backgroundColor: [
-                "rgba(255, 99, 132, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
-                "rgba(255, 206, 86, 0.2)",
-                "rgba(75, 192, 192, 0.2)",
-                "rgba(153, 102, 255, 0.2)",
-                "rgba(255, 159, 64, 0.2)",
+                "rgba(255, 99, 132, 0.5)",
+                "rgba(54, 162, 235, 0.5)",
+                "rgba(255, 206, 86, 0.5)",
+                "rgba(75, 192, 192, 0.5)",
+                "rgba(153, 102, 255, 0.5)",
+                "rgba(255, 159, 64, 0.5)",
               ],
               borderColor: [
                 "rgba(255, 99, 132, 1)",
@@ -97,6 +262,7 @@
                 "rgba(255, 159, 64, 1)",
               ],
               borderWidth: 1,
+              color: '#FFFFFF',
             },
             {
             type: 'line',
@@ -114,12 +280,17 @@
         data,
         options: {
           plugins: {
+            customCanvasBackgroundColor: {
+        color: 'white',
+      },
             title: {
                 display: true,
-                text: "Today's NUTRIENTS",
-                font: {size: 20}
+                text:  "{{currentUser.first_name}}'s Weekly Nutrition",
+                font: {size: 20},
+                color: '#FFFFFF'
             }
         },
+        plugins: [plugin],
           scales: {
             y: {
               beginAtZero: true,
@@ -192,12 +363,17 @@
       data: ldata,
       options: {
           plugins: {
+            customCanvasBackgroundColor: {
+        color: 'white',
+      },
             title: {
                 display: true,
                 text:  "{{currentUser.first_name}}'s Weekly Nutrition",
-                font: {size: 20}
+                font: {size: 20},
+                color: '#FFFFFF'
             }
         },
+        plugins: [plugin],
       },
     };
 

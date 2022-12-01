@@ -72,6 +72,7 @@
 {% endif %}
 </div>
 
+{% if recommendedFoods %}
 <br><br>
 <p><b><h5>Because you have {{comorbidity}}:</h5></b></p>
 <br>
@@ -92,5 +93,6 @@
     {% endfor %}
     </ul>
 </div>
+{% endif %}
 
 {% endblock %}

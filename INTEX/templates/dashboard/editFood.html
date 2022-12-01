@@ -1,0 +1,32 @@
+{% extends 'partials/base.html' %} 
+{% load static %} 
+{% block content %}
+{% load crispy_forms_tags %}
+<h1>Daily Food Journal</h1>
+<br>
+<div class = "border p-3 shadow">
+    <h4>Input New Food Item</h4>
+    <form method="POST" action="{% url 'editFoodItemEntry'%}" name="form">
+        {% csrf_token %}
+        <label for="food_name">Food Name:</label>
+        <input type="text" name="food_name" maxlength="20" placeholder="Food Name"><br>
+        <label for="serving_size">Serving Size:</label>
+        <input name="serving_size" type="number" step="any"><br>
+        <label for="units">Serving Size Units:</label>
+        <input type="text" name="units" maxlength="5" placeholder="g = grams"><br>
+        <label for="potassium">Potassium per serving:</label>
+        <input type="number" name="potassium" placeholder="mg"><br>
+        <label for="phosphorus">Phosphorus per serving:</label>
+        <input type="number" name="phosphorus" placeholder="mg"><br>
+        <label for="sodium">Sodium per serving:</label>
+        <input type="number" name="sodium" placeholder="mg"><br>
+        <label for="calcium">Calcium per serving:</label>
+        <input type="number" name="calcium" placeholder="mg"><br>
+        <label for="protein">Protein per serving:</label>
+        <input type="number" name="protein" placeholder="g"><br>
+        <label for="sugar">Sugar per serving:</label>
+        <input type="number" name="sugar" placeholder="g"><br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock %}

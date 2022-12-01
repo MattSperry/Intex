@@ -2,13 +2,51 @@
 {% load static %} 
 {% block content %}
 {% load crispy_forms_tags %}
+<script
+  src="https://code.jquery.com/jquery-3.6.1.min.js"
+  integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+  crossorigin="anonymous"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $(function() {
+          $( "#some_flag" ).dialog({
+              modal: true,
+              closeOnEscape: false,
+              dialogClass: "no-close",
+              resizable: false,
+              draggable: false,
+              width: 800,
+              buttons: [
+                  {
+                      text: "OK",
+                      click: function() {
+                      $( this ).dialog( "close" );
+                      }
+                  }
+              ]
+          });
+      });
+  });
+  $(document).ready(function(){
+
+    $("#some_flag").on("click", function(){
+          $("#some_flag").hide();
+    });
+
+  });
+</script>
+{% if success == False %}
+<div id="some_flag" title="Some Flag" style="background-color: red; text-align: center;">
+    <p style="color:white">Username or password incorrect, try again (X)</p>
+</div>
+{% endif %}
 <h1>Create Profile</h1>
 <div class = "countainer py-5">
     <h3>Register</h3>
     <form method="POST">
         {% csrf_token %}
         {{ register_form|crispy }}
-        <button class="btn btn-primary" type="submit" onclick="setTimeout('window.alert('Incorrect username or password')', 1000)" >Register</button>
+        <button class="btn btn-primary" type="submit" >Register</button>
     </form>
     <p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
 </div>

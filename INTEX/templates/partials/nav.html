@@ -1,9 +1,15 @@
+<style>
+    .bg-246174{
+        background : #246174;
+        background-color: #246174
+    };
+</style>
 <nav style="position: fixed;
 left: 0;
 top: 0;
-width: 100%;" class="navbar navbar-expand-lg navbar-dark bg-dark">
+width: 100%; z-index: 100;" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class = "container">
-        <a class="navbar-brand" href="#"><b>Nutrition</b></a>
+        <a class="navbar-brand" href="#"><b>CKD Health</b></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" 
         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
         aria-expanded="false" aria-label="Toggle navigation">
@@ -12,18 +18,18 @@ width: 100%;" class="navbar navbar-expand-lg navbar-dark bg-dark">
   
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                {% if request.path != '/' %}
-                <li class="nav-item active">
+                {% if request.path != '/register/' %}
+                <li style="margin-left: 25px" class="nav-item active">
                 <a class="nav-link" href="{% url 'dashboard-index' %}">Home <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item active">
+                <li style="margin-left: 25px" class="nav-item active">
                 <a class="nav-link" href="{% url 'dashboard-journal' %}">Meal Entry<span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item active">
+                <li style="margin-left: 25px" class="nav-item active">
                 <a class="nav-link" href="{% url 'dashboard-suggestions' %}">Dietary Tips<span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item active">
-                <a class="nav-link" href="{% url 'entries' %}">Journal Entries<span class="sr-only">(current)</span></a>
+                <li style="margin-left: 25px" class="nav-item active">
+                <a class="nav-link" href="{% url 'entries' %}">Nutrition Journal<span class="sr-only">(current)</span></a>
                 </li>
                 {% endif %}
             </ul>

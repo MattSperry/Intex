@@ -48,7 +48,7 @@ class JournalEntry(models.Model):
     food_name = models.CharField(max_length=500)
     
     def __str__(self):
-        return str(self.journalID) + " " + str(self.date_recorded)
+        return str(self.journalID) + " " + str(self.date_recorded) + " " + str(self.personID)
 
     class Meta:
         db_table = 'Journal Entry'

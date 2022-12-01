@@ -101,9 +101,13 @@ celerybeat-schedule.*
 .venv 
 env/ 
 venv/ 
+#*.env           UNCOMMENT FOR DEPLOYMENT
 ENV/ 
 env.bak/ 
 venv.bak/ 
+
+#*.pyc           UNCOMMENT FOR DEPLOYMENT
+#staticfiles/    UNCOMMENT FOR DEPLOYMENT
 
 # mkdocs documentation 
 /site 

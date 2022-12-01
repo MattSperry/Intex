@@ -11,6 +11,7 @@ import datetime
  
 # Create your views here.
 def registerPageView(request):
+    success = True
     if request.method == "POST":
         form = UserForm(request.POST)
         if form.is_valid():
@@ -19,8 +20,13 @@ def registerPageView(request):
             messages.success(request, "Registration Successful.")
             return redirect("dashboard-input")
         messages.error(request, "Unsuccessful registration. Invalid information.")
+        success = False
     form = UserForm()
-    return render (request=request, template_name="dashboard/register.html", context={"register_form":form})
+    context={
+        "register_form": form,
+        "success" : success,
+        }
+    return render (request, "dashboard/register.html", context)
 
 def inputProcess(request):
     if request.method == "POST":
@@ -185,9 +191,13 @@ def suggestionsPageView(request):
     if 'Protein' in alerts:
         proteinAvoid = ["Chicken", "Fish", "Eggs"]
     if 'Sugar' in alerts:
-        sugarAvoid = ["Candy", "Soda", "Condiments"]
+        sugarAvoid = ["Candy", "Soda", "Desserts"]
 
-    comorbidity = currentPerson.comorbidity.name
+    if currentPerson.comorbidity.name != None:
+        comorbidity = currentPerson.comorbidity.name
+
+    reccomendedFoods = None
+    badFoods = None
     if comorbidity == "High Blood Pressure":
         reccomendedFoods = ["Fruits", "Vegetables", "Whole grains", "Low-fat dairy", "Chicken", "Fish", "Nuts"]
         badFoods = ["Sodium", "Red meat", "Candy", "Soda", "Tea", "Saturated fat", "Trans fat"]
@@ -553,21 +563,77 @@ def updateJournalEntry(request):
             new_food.sugar = sugar
 
             new_food.save()
-        if request.method == 'POST':
-            new_entry = JournalEntry()
-
-            new_entry.food_name = request.POST['food_name']
-            new_entry.journalID = request.POST['journalID']
-            new_entry.date_recorded = request.POST['date']
-            new_entry.time_recorded = request.POST['time']
-            new_entry.amount = request.POST['amount']
-
-            new_entry.save()
 
     return redirect("entries")
+
+def editFoodItemEntry(request):
+    if request.method == 'POST':
+        new_food = Food()
+
+        new_food.food_name = request.POST['food_name']
+        new_food.serving_size = request.POST['serving_size']
+        new_food.units = request.POST['units']
+        new_food.potassium = request.POST['potassium']
+        new_food.phosphorus = request.POST['phosphorus']
+        new_food.sodium = request.POST['sodium']
+        new_food.calcium = request.POST['calcium']
+        new_food.protein = request.POST['protein']
+        new_food.sugar = request.POST['sugar']
+
+        new_food.save()
+
+    return render(request, 'dashboard/updateEntries.html')
 
 def deleteJournalEntry(request, journalID):
     entry = JournalEntry.objects.get(journalID = journalID)
     entry.delete()
     return redirect('entries')
+
+def foodSearchUpdateJournal(request, journalID):
+
+    query = request.POST['search']
+    dataType = 'Foundation'
+    pageSize = 10
+    pageNumber = 1
+    api_key = 'F92KbXwQwUXrteSO6PpQ7zocfxkkrt5inVeLVwqI'
+
+    url = "https://api.nal.usda.gov/fdc/v1/foods/search?query=" + query + "&dataType=" + dataType + "&pageSize=" + str(pageSize) + "&pageNumber=" + str(pageNumber) + "&api_key=" + api_key
+
+
+    payload={}
+    headers = {
+    'Cookie': 'ApplicationGatewayAffinity=5164bd01bfd5c519ce1bd2870a3ce176; ApplicationGatewayAffinityCORS=5164bd01bfd5c519ce1bd2870a3ce176'
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+    json_response = response.json()
+
+    if len(Food.objects.filter(food_name = request.POST['search'])) <= 0:
+        food_names = []
+        serving_sizes = []
+        if len(response.json()['foods']) > 0:
+            for food in json_response['foods']:
+                food_names.append(food['description'])
+                serving_sizes.append('100 g')
+    else:
+        food_names = []
+        serving_sizes = []
+
+        for food in Food.objects.filter(food_name = request.POST['search']):
+            food_names.append(food.food_name)
+            serving_sizes.append(str(food.serving_size) + " " + str(food.units))
+
+        if len(response.json()['foods']) > 0:
+            for food in json_response['foods']:
+                if food['description'] not in food_names:
+                    food_names.append(food['description'])
+                    serving_sizes.append('100 g')
+
+    context = {
+        'food_names' : food_names,
+        'serving_sizes' : serving_sizes,
+        "currentEntry" : JournalEntry.objects.get(journalID = journalID)
+    }
+
+    return render(request, 'dashboard/updateEntries.html', context)
     
