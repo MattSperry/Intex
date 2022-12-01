@@ -88,6 +88,7 @@ def loginPageView(request):
 		if form.is_valid():
 			username = form.cleaned_data.get('username')
 			password = form.cleaned_data.get('password')
+            #user = User.objects.get(username = username, password = password)
 			user = authenticate(username=username, password=password)
 			if user is not None:
 				login(request, user)
@@ -123,6 +124,69 @@ def journalPageView(request):
 def suggestionsPageView(request):
     currentPerson = Person.objects.get(personID  = request.user.id)
 
+    data = JournalEntry.objects.filter(personID = request.user.id, date_recorded = datetime.datetime.today())
+    potassium = 0
+    phosphorus = 0
+    sodium = 0
+    calcium = 0
+    protein = 0
+    sugar = 0
+
+    for entry in data:
+        food = Food.objects.get(food_name = entry.food_name)
+        potassium += food.potassium * entry.amount
+        phosphorus += food.phosphorus * entry.amount
+        sodium += food.sodium * entry.amount
+        calcium += food.calcium * entry.amount
+        protein += ((food.protein * entry.amount) * 10)
+        sugar += ((food.sugar * entry.amount) * 10)
+    
+    rprotein = 0
+    person = Person.objects.get(personID = request.user.id)
+    rprotein = person.weight * 0.45359237 * .6 * 100
+        
+    rsugar = 0
+    if person.gender == 'Male' :
+        rsugar = 3600
+    else :
+        rsugar = 2500
+    
+    data = [2750, 900, 2702, 2000, rprotein, rsugar]
+
+    alerts = ''
+    if potassium > data[0]:
+        alerts += 'Potassium '
+    if phosphorus > data[1]:
+        alerts += 'Phosphorus '
+    if sodium > data[2]:
+        alerts += 'Sodium '
+    if calcium > data[3]:
+        alerts += 'Calcium '
+    if protein > data[4]:
+        alerts += 'Protein '
+    if sugar > data[5]:
+        alerts += 'Sugar '
+     
+    potassiumAvoid = None
+    phosphorusAvoid = None
+    sodiumAvoid = None
+    calciumAvoid = None
+    proteinAvoid = None
+    sugarAvoid = None
+
+    if 'Potassium' in alerts:
+        potassiumAvoid = ["Banana", "Spinach", "Beans"]
+    if 'Phosphorus' in alerts:
+        phosphorusAvoid = ["Chicken", "Nuts", "Fish"]
+    if 'Sodium' in alerts:
+        sodiumAvoid = ["Cereal", "Cheese", "Pizza"]
+    if 'Calcium' in alerts:
+        calciumAvoid = ["Milk", "Yogurt", "Cheese"]
+    if 'Protein' in alerts:
+        proteinAvoid = ["Chicken", "Fish", "Eggs"]
+    if 'Sugar' in alerts:
+        sugarAvoid = ["Candy", "Soda", "Condiments"]
+
     comorbidity = currentPerson.comorbidity.name
     if comorbidity == "High Blood Pressure":
         reccomendedFoods = ["Fruits", "Vegetables", "Whole grains", "Low-fat dairy", "Chicken", "Fish", "Nuts"]
@@ -149,7 +213,13 @@ def suggestionsPageView(request):
     context = {
         "recommendedFoods" : reccomendedFoods,
         "badFoods" : badFoods,
-        "comorbidity" : comorbidity
+        "potassiumAvoid" : potassiumAvoid,
+        "phosphorusAvoid" : phosphorusAvoid,
+        "sodiumAvoid" : sodiumAvoid,
+        "calciumAvoid" : calciumAvoid,
+        "proteinAvoid" : proteinAvoid,
+        "sugarAvoid" : sugarAvoid,
+        "comorbidity" : comorbidity,
     }
     
     return render(request, 'dashboard/suggestions.html', context)
@@ -213,8 +283,6 @@ def indexPageView(request):
         alerts += 'Protein '
     if sugar > data[5]:
         alerts += 'Sugar '
-
-        
 
     for i in range(3,7) :
         today = date.today()

@@ -5,17 +5,73 @@
 <h2>Dietary Tips</h2>
 <br>
 
+
 <div style="display: flex">
-    <ul style="width: 30%">
-        <p><b>Avoid these foods if potassium is high:</b></p>
-        Bananas
-        <br>
-        Spinach
-        <br>
-        Beans
-        <br>
-    </ul>
+{% if potassiumAvoid%}
+    
+        <ul style="width: 33%; border: 1px solid black; padding-left: 20px; padding-top: 15px;">
+            <p style="color: red;"><b>Your potassium is too high! Avoid these foods:</b></p>
+            {%for foods in potassiumAvoid%}
+            <ul>{{foods}}</ul>
+            {%endfor%}
+        </ul> 
+{% endif %}
+
+{% if phosphorusAvoid%}
+    
+        <ul style="width: 33%; border: 1px solid black; padding-left: 20px; padding-top: 15px;">
+            <p style="color: red;"><b>Your phosphorus is too high! Avoid these foods:</b></p>
+            {%for foods in phosphorusAvoid%}
+            <ul>{{foods}}</ul>
+            {%endfor%}
+        </ul>
+     
+{% endif %}
+
+{% if sodiumAvoid%}
+    
+        <ul style="width: 33%; border: 1px solid black; padding-left: 20px; padding-top: 15px;">
+            <p style="color: red;"><b>Your sodium is too high! Avoid these foods:</b></p>
+            {%for foods in sodiumAvoid%}
+            <ul>{{foods}}</ul>
+            {%endfor%}
+        </ul>
+    
+{% endif %}
+
+{% if calciumAvoid%}
+    
+        <ul style="width: 33%; border: 1px solid black; padding-left: 20px; padding-top: 15px;">
+            <p style="color: red;"><b>Your calcium is too high! Avoid these foods:</b></p>
+            {%for foods in calciumAvoid%}
+            <ul>{{foods}}</ul>
+            {%endfor%}
+        </ul>
+     
+{% endif %}
+
+{% if proteinAvoid%}
+        <ul style="width: 33%; border: 1px solid black; padding-left: 20px; padding-top: 15px;">
+            <p style="color: red;"><b>Your protein is too high! Avoid these foods:</b></p>
+            {%for foods in proteinAvoid%}
+            <ul>{{foods}}</ul>
+            {%endfor%}
+        </ul>
+     
+{% endif %}
+
+{% if sugarAvoid%}
+    
+        <ul style="width: 33%; border: 1px solid black; padding-left: 20px; padding-top: 15px;">
+            <p style="color: red;"><b>Your sugar is too high! Avoid these foods:</b></p>
+            {%for foods in sugarAvoid%}
+            <ul>{{foods}}</ul>
+            {%endfor%}
+        </ul>
+    
+{% endif %}
 </div>
+
 <br><br>
 <p><b><h5>Because you have {{comorbidity}}:</h5></b></p>
 <br>

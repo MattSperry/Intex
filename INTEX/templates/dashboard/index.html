@@ -37,10 +37,10 @@
 </script>
 {% if alerts %}
     <div id="some_flag" title="Some Flag" style="background-color: red; text-align: center;">
-        <p style="color:white;">Warning! Your {{alerts}} levels are too high, see dietary suggestions (X)</p>
+        <p style="color:white;">Warning! Your {{alerts}} levels are too high! See dietary tips.        (X)</p>
     </div>
 {% endif %}
-<div class="row mt-3 pt-3">
+<div class="row mt-3 pt-3" style="float:; margin-left:auto; margin-top: 3.0em;">
   <ul class="navbar-nav mr-auto">
     {% if user.is_authenticated %}
     
@@ -135,7 +135,7 @@
   
     //line data
     const ldata ={
-      labels: ['6 Days Ago', '5 Days Ago', '4 Days Ago', '3 Days Ago', '2 Days Ago', 'Yesterday', 'Today'],
+      labels: ['Today', 'Yesterday', '2 Days Ago', '3 Days Ago', '4 Days Ago', '5 Days Ago', '6 Days Ago'],
         datasets: [{
           label: 'Potassium',
           data: [{%for data in wpot%} {{data}}, {%endfor%}],
