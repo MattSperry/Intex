@@ -200,22 +200,19 @@ def indexPageView(request):
     
     data = [2750, 900, 2702, 2000, rprotein, rsugar]
 
-    alerts = [
-        False, False, False, False, False, False
-    ]
-
+    alerts = ''
     if potassium > data[0]:
-        alerts[0] = True
+        alerts += 'Potassium '
     if phosphorus > data[1]:
-        alerts[1] = True
+        alerts += 'Phosphorus '
     if sodium > data[2]:
-        alerts[2] = True
-    if sodium > data[3]:
-        alerts[3] = True
-    if sodium > data[4]:
-        alerts[4] = True
-    if sodium > data[5]:
-        alerts[5] = True
+        alerts += 'Sodium '
+    if calcium > data[3]:
+        alerts += 'Calcium '
+    if protein > data[4]:
+        alerts += 'Protein '
+    if sugar > data[5]:
+        alerts += 'Sugar '
 
         
 

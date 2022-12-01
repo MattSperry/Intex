@@ -27,14 +27,19 @@
           });
       });
   });
+  $(document).ready(function(){
+
+    $("#some_flag").on("click", function(){
+          $("#some_flag").hide();
+    });
+
+  });
 </script>
-{% for alert in alerts%}
-{% if  alert%}
-    <div id="some_flag" title="Some Flag" style="background-color: red;">
-        <p style="color:white; margin-left: auto; margin-right: auto;">Warning! Your potassium levels are too high, see dietary suggestions</p>
+{% if alerts %}
+    <div id="some_flag" title="Some Flag" style="background-color: red; text-align: center;">
+        <p style="color:white;">Warning! Your {{alerts}} levels are too high, see dietary suggestions (X)</p>
     </div>
 {% endif %}
-{%endfor%}
 <div class="row mt-3 pt-3">
   <ul class="navbar-nav mr-auto">
     {% if user.is_authenticated %}

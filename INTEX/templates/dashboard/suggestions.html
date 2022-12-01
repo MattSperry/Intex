@@ -4,10 +4,21 @@
 {% load crispy_forms_tags %}
 <h2>Dietary Tips</h2>
 <br>
+
+<div style="display: flex">
+    <ul style="width: 30%">
+        <p><b>Avoid these foods if potassium is high:</b></p>
+        Bananas
+        <br>
+        Spinach
+        <br>
+        Beans
+        <br>
+    </ul>
+</div>
+<br><br>
 <p><b><h5>Because you have {{comorbidity}}:</h5></b></p>
 <br>
-
-
 <div style="display: flex">
     <ul style="width: 30%">
     <p><b>We recommend these foods:</b></p>
@@ -23,9 +34,6 @@
         {{food}}
         <br>
     {% endfor %}
-    </ul>
-    <ul style="width: 50%">
-        <img href="img/healthy-foods.webp">
     </ul>
 </div>
 
