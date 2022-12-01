@@ -31,16 +31,17 @@
         <p> You have not searched a food, or your food item is not in the database</p>
     {% endif %}
 
-    <form method="POST" action="{% url 'journalEntryAdd'%}" name="form">
+    <form method="POST" action="{% url 'update-entries'%}" name="form">
         {% csrf_token %}
+        <input type="hidden" value="{{currentEntry.journalID}}" name="journalid">
         <label for="food_name">Food Name:</label>
-        <input type="text" name="food_name" maxlength="200" placeholder="Use the food item name above">
-        <label for="dateTime">Date Eaten:</label>
-        <input type="date" name="date">
+        <input type="text" name="food_name" maxlength="200" value="{{currentEntry.food_name}}"><br>
+        <label for="date">Date Eaten:</label>
+        <input type="date" name="date" value="{{currentEntry.date_recorded}}"><br>
         <label for="time">Time Eaten:</label>
-        <input type="time" name="time">
+        <input type="time" name="time" value="{{currentEntry.time_recorded}}"><br>
         <label for="amount">Amount (based on above serving size):</label>
-        <input type="number" name="amount" step=1>
+        <input type="number" name="amount" step=1 value="{{currentEntry.amount}}"><br>
         <button class = "btn btn-success btn-block" type='submit'>Submit</button>
     </form>
 </div>

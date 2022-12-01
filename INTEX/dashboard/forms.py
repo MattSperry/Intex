@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 class PersonForm(forms.ModelForm):
     class Meta:
         model = Person
-        fields = '__all__'
+        fields = "__all__"
+        #fields = ("personID", "first_name", "last_name", "comorbidity", "date_of_birth", "weight", "height", "gender".lower().capitalize(), "race")
 
 class UserForm(UserCreationForm):
     class Meta:

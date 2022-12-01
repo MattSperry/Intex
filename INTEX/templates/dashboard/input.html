@@ -2,16 +2,47 @@
 {% load static %} 
 {% block content %}
 {% load crispy_forms_tags %}
-<h1>Input Info</h1>
-<p>*Please add this data to get the correct dietary recomendations</p>
+<h1>Update Info</h1>
+<p>*Please add this data to get correct dietary recommendations</p>
 <br>
 <div class = "border p-3 shadow">
     <h4>Add Data</h4>
     <hr>
-    <form method="POST">
+    <form name="form" method="POST" action="{% url 'dashboard-input-process' %}">
         {% csrf_token %}
-        {{ form|crispy}}
-        <input class = "btn btn-success btn-block" type='submit' value = 'Add'>
+        <label for="first_name">First Name:</label>
+        <input style="background-color: white; color: black;" class = "btn btn-success btn-block" type='text' name="first_name">
+        <br>
+        <label for="last_name">Last Name:</label>
+        <input style="background-color: white; color: black;" class = "btn btn-success btn-block" type='text' name="last_name">
+        <br>
+        <label for="comorbidity">Comorbidity:</label>
+        <select style="background-color: white; color: black;" class = "btn btn-success btn-block" name="comorbidity">
+            {% for comorbidity in comorbidities%}
+            <option value="{{comorbidity}}">{{comorbidity}}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="date_of_birth">Date of Birth:</label>
+        <input style="background-color: white; color: black;" class = "btn btn-success btn-block" type='date' name="date_of_birth">
+        <br>
+        <label for="weight">Weight (lb):</label>
+        <input style="background-color: white; color: black;" class = "btn btn-success btn-block" type='number' name="weight">
+        <br>
+        <label for="height">Height (inches):</label>
+        <input style="background-color: white; color: black;" class = "btn btn-success btn-block" type='number' name="height">
+        <br>
+        <label for="gender">Gender:</label>
+        <input style="background-color: white; color: black;" class = "btn btn-success btn-block" type='text' name="gender">
+        <br>
+        <label for="race">Race:</label>
+        <select style="background-color: white; color: black;" class = "btn btn-success btn-block" name="race">
+            {% for race in races%}
+            <option value="{{race}}">{{race}}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type='submit'>Submit</button>
     </form>
 </div>
 

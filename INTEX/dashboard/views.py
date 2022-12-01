@@ -6,7 +6,8 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 import requests
- 
+from datetime import date, timedelta
+import datetime
  
 # Create your views here.
 def registerPageView(request):
@@ -21,19 +22,31 @@ def registerPageView(request):
     form = UserForm()
     return render (request=request, template_name="dashboard/register.html", context={"register_form":form})
 
+def inputProcess(request):
+    if request.method == "POST":
+        person = Person()
+
+        person.personID = User.objects.get(id = request.user.id)
+        person.first_name = request.POST["first_name"]
+        person.last_name = request.POST["last_name"]
+        person.comorbidity = Comorbidity.objects.get(name = request.POST["comorbidity"])
+        person.date_of_birth = request.POST["date_of_birth"]
+        person.weight = request.POST["weight"]
+        person.height = request.POST["height"]
+        person.gender = request.POST["gender"].lower().capitalize()
+        person.race = Race.objects.get(race = request.POST["race"])
+        
+        person.save()
+
+        return redirect("dashboard-index")
+
 def inputPageView(request):
-    data = Person.objects.all()
-    if request.method == 'POST':
-        form = PersonForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("dashboard-index")
-    else:
-        form = PersonForm()
+    
     context = {
-        'data': data,
-        'form': form,
+        "comorbidities" : Comorbidity.objects.all(),
+        "races" : Race.objects.all()
     }
+
     return render(request, "dashboard/input.html", context)
 
 def profilePageView(request):
@@ -61,10 +74,12 @@ def updateDataView(request):
         person.date_of_birth = request.POST["date_of_birth"]
         person.weight = request.POST["weight"]
         person.height = request.POST["height"]
-        person.gender = request.POST["gender"]
+        person.gender = request.POST["gender"].lower().capitalize()
         person.race = Race.objects.get(race = request.POST["race"])
         
         person.save()
+
+        return redirect("dashboard-profile")
     return updateInfoView(request)
 
 def loginPageView(request):
@@ -106,25 +121,131 @@ def journalPageView(request):
     return render(request, 'dashboard/journal.html', context)
 
 def suggestionsPageView(request):
-    return render(request, 'dashboard/suggestions.html')
+    currentPerson = Person.objects.get(personID  = request.user.id)
+
+    comorbidity = currentPerson.comorbidity.name
+    if comorbidity == "High Blood Pressure":
+        reccomendedFoods = ['fish', 'spinach']
+        badFoods = ['soda', 'candy']
+    elif comorbidity == "Diabetes type 1":
+        reccomendedFoods = ["Fish", "Spinach", "Kale", "Avocados", "Eggs", "Chia seeds", "Oatmeal",
+        "Milk", "Cheese", "Beans", "Yogurt (plain)", "Nuts", "Broccoli", "Cauliflower", "Brussel sprouts", 
+        "Cabbage", "Quinoa", "Whole grain", "Brown rice", "Flaxseeds", "Olives", "Sweet potatoes", 
+        "Strawberries", "Garlic", "Squash", "Fruits", "Berries"]
+        badFoods = ["White bread", "Bagels", "Pasta", "Rice", "Soda", "Tea", "Fried foods", "Alcohol",
+        "Cereal", "Candy", "Pumpkin", "Processed meats", "Fruit juice", "Melons", "Pineapple", "Popcorn",
+        "White potatoes", "Margarine", "Peanut butter", "Trans fat", "Brown sugar", "Honey", "Syrup",
+        "Pretzels", "Graham crackers", "Saltines", "French fries"]
+    elif comorbidity == "Diabetes type 2":
+        reccomendedFoods = ["Fish", "Spinach", "Kale", "Avocados", "Eggs", "Chia seeds", "Oatmeal",
+        "Milk", "Cheese", "Beans", "Yogurt (plain)", "Nuts", "Broccoli", "Cauliflower", "Brussel sprouts", 
+        "Cabbage", "Quinoa", "Whole grain", "Brown rice", "Flaxseeds", "Olives", "Sweet potatoes", 
+        "Strawberries", "Garlic", "Squash", "Fruits", "Berries"]
+        badFoods = ["White bread", "Bagels", "Pasta", "Rice", "Soda", "Tea", "Fried foods", "Alcohol",
+        "Cereal", "Candy", "Pumpkin", "Processed meats", "Fruit juice", "Melons", "Pineapple", "Popcorn",
+        "White potatoes", "Margarine", "Peanut butter", "Trans fat", "Brown sugar", "Honey", "Syrup",
+        "Pretzels", "Graham crackers", "Saltines", "French fries"]
+        
+    context = {
+        "recommendedFoods" : reccomendedFoods,
+        "badFoods" : badFoods,
+        "comorbidity" : comorbidity
+    }
+    
+    return render(request, 'dashboard/suggestions.html', context)
 
 def indexPageView(request):
+    data = JournalEntry.objects.filter(personID = request.user.id, date_recorded = datetime.datetime.today())
+    potassium = 0
+    phosphorus = 0
+    sodium = 0
+    calcium = 0
+    protein = 0
+    sugar = 0
+
+    for entry in data:
+        food = Food.objects.get(food_name = entry.food_name)
+        potassium += food.potassium * entry.amount
+        phosphorus += food.phosphorus * entry.amount
+        sodium += food.sodium * entry.amount
+        calcium += food.calcium * entry.amount
+        protein += ((food.protein * entry.amount) * 10)
+        sugar += ((food.sugar * entry.amount) * 10)
+    
+    rprotein = 0
+    person = Person.objects.get(personID = request.user.id)
+    rprotein = person.weight * 0.45359237 * .6 * 100
+        
+    rwater = 0
+    rsugar = 0
+    if person.gender == 'Male' :
+        rwater = 3700
+        rsugar = 3600
+    else :
+        rwater = 2700
+        rsugar = 2500
+
+    day_potassium = 0
+    day_phosphorus = 0
+    day_sodium = 0
+    day_calcium = 0
+    day_protein = 0
+    day_sugar = 0
+
+    week_potassium = []
+    week_phosphorus = []
+    week_sodium = []
+    week_calcium = []
+    week_protein = []
+    week_sugar = []
+
+    for i in range(1,8) :
+        day_data = JournalEntry.objects.filter(personID = request.user.id, date_recorded = (datetime.datetime.today() - timedelta(days=i)))
+        for info in day_data:
+            day_food = Food.objects.get(food_name = info.food_name)
+            day_potassium += day_food.potassium * info.amount
+            day_phosphorus += day_food.phosphorus * info.amount
+            day_sodium += day_food.sodium * info.amount
+            day_calcium += day_food.calcium * info.amount
+            day_protein += ((day_food.protein * info.amount) * 10)
+            day_sugar += ((day_food.sugar * info.amount) * 10)
+            #append daily values to week list
+            week_potassium.append(day_potassium)
+            week_phosphorus.append(day_phosphorus)
+            week_sodium.append(day_sodium)
+            week_calcium.append(day_calcium)
+            week_protein.append(day_protein)
+            week_sugar.append(day_sugar)
+        
     context = {
-        'currentUser': Person.objects.get(personID = request.user.id)
+        'names' : ['Potassium (mg)', 'Phosphorus (mg)', 'Sodium (mg)', 'Calcium (mg)', 'Protein (cg)', 'Sugar (cg)'],
+        'totals' : [potassium, phosphorus, sodium, calcium, protein, sugar],
+        'protein' : rprotein, 
+        'water' : rwater,
+        'sugar' : rsugar,
+        'wpot': week_potassium, 
+        'wphos':week_phosphorus, 
+        'wsod':week_sodium, 
+        'wcal':week_calcium, 
+        'wpro':week_protein, 
+        'wsug':week_sugar,
+        'currentUser': Person.objects.get(personID  = request.user.id)
     }
     return render(request, 'dashboard/index.html', context)
+
 
 def journalEntryAdd(request):
     if request.method == 'POST':
         new_entry = JournalEntry()
         person = Person.objects.get(personID = request.user.id)
         new_entry.personID = person.personID
-        new_entry.date_time_eaten = request.POST['dateTime']
+        new_entry.date_eaten = request.POST['date']
+        new_entry.time_eaten = request.POST['time']
         new_entry.food_name = request.POST['food_name']
         new_entry.amount = request.POST['amount']
         new_entry.save()
 
-        if Food.objects.get(food_name = request.POST['food_name']) == None:
+        if len(Food.objects.filter(food_name = request.POST['food_name'])) <= 0:
             new_food = Food()
 
             new_food.food_name = request.POST['food_name']
@@ -147,24 +268,35 @@ def journalEntryAdd(request):
             json_response = response.json()
 
             if len(response.json()['foods']) > 0:
+                phosphorus = 0
+                sodium = 0
+                potassium = 0
+                calcium = 0
+                protein = 0
+                sugar = 0
 
-                phosphorus = json_response['foods'][0]['foodNutrients'][2] # Phosphorus
-                potassium = json_response['foods'][0]['foodNutrients'][3] # Potassium
-                sodium = json_response['foods'][0]['foodNutrients'][4] # Sodium
-                sugar = json_response['foods'][0]['foodNutrients'][11] # Sugars
-                calcium = json_response['foods'][0]['foodNutrients'][24] # Calcium
-                protein = json_response['foods'][0]['foodNutrients'][25] # Protein
+                for nutrient in json_response['foods'][0]['foodNutrients']:
+                    if nutrient['nutrientName'] == 'Phosphorus, P':
+                        phosphorus = nutrient['value']
+                    if nutrient['nutrientName'] == 'Sodium, Na':
+                        sodium = nutrient['value']
+                    if nutrient['nutrientName'] == 'Potassium, K':
+                        potassium = nutrient['value']
+                    if nutrient['nutrientName'] == 'Calcium, Ca':
+                        calcium = nutrient['value']
+                    if nutrient['nutrientName'] == 'Protein':
+                        protein = nutrient['value']
+                    if nutrient['nutrientName'] == 'Carbohydrate, by difference':
+                        sugar = nutrient['value']
 
-                if len(json_response['foods'][0]['foodMeasures']) <= 0:
-                    new_food.serving_size = 100
-                    new_food.units = 'g'
-
-                new_food.potassium = potassium['value']
-                new_food.phosphorus = phosphorus['value']
-                new_food.sodium = sodium['value']
-                new_food.calcium = calcium['value']
-                new_food.protein = protein['value']
-                new_food.sugar = sugar['value']
+                new_food.serving_size = 100
+                new_food.units = 'g'
+                new_food.potassium = potassium
+                new_food.phosphorus = phosphorus
+                new_food.sodium = sodium
+                new_food.calcium = calcium
+                new_food.protein = protein
+                new_food.sugar = sugar
 
                 new_food.save()
 
@@ -189,25 +321,30 @@ def foodSearch(request):
     response = requests.request("GET", url, headers=headers, data=payload)
     json_response = response.json()
 
-    if Food.objects.get(food_name = request.POST['search']) == None:
-        food_array = []
+    if len(Food.objects.filter(food_name = request.POST['search'])) <= 0:
+        food_names = []
+        serving_sizes = []
         if len(response.json()['foods']) > 0:
             for food in json_response['foods']:
-                food_array.append(food['description'])
+                food_names.append(food['description'])
+                serving_sizes.append('100 g')
     else:
-        food_array = []
+        food_names = []
+        serving_sizes = []
 
-        for food in Food.objects.get(food_name = request.POST['search']):
-            food_array.append(food)
+        for food in Food.objects.filter(food_name = request.POST['search']):
+            food_names.append(food.food_name)
+            serving_sizes.append(str(food.serving_size) + " " + str(food.units))
 
         if len(response.json()['foods']) > 0:
-
             for food in json_response['foods']:
-                if food['description'] not in food_array:
-                    food_array.append(food['description'])
+                if food['description'] not in food_names:
+                    food_names.append(food['description'])
+                    serving_sizes.append('100 g')
 
     context = {
-        'food_names' : food_array
+        'food_names' : food_names,
+        'serving_sizes' : serving_sizes,
     }
 
     return render(request, 'dashboard/journal.html', context)
@@ -235,19 +372,97 @@ def addFoodItemEntry(request):
 
 
 def entriesPageView(request) :
-    data = JournalEntry.objects.all()
+    data = JournalEntry.objects.filter(personID = request.user.id)
+    date_str = ""
 
     context = {
         "journal_entries" : data,
-        'currentUser': Person.objects.get(personID  = request.user.id)
-    }
+        'currentUser': Person.objects.get(personID  = request.user.id),
+        'date_str' : date_str
+        }
     return render(request, 'dashboard/entries.html', context)
 
 
+def updateEntries(request, journalid):
+    context = {
+        "currentUser" : Person.objects.get(personID  = request.user.id),
+        "currentEntry" : JournalEntry.objects.get(journalID = journalid)
+    }
+    return render(request, "dashboard/updateEntries.html", context)
+
+
+def updateJournalEntry(request): 
+    entry = JournalEntry.objects.get(journalID = request.POST['journalid'])
+    entry.food_name = request.POST['food_name']
+    entry.date_recorded = request.POST['date']
+    entry.time_recorded = request.POST['time']
+    entry.amount = request.POST['amount']
+
+    entry.save()
+
+    if len(Food.objects.filter(food_name = request.POST['food_name'])) <= 0:
+        new_food = Food()           
+        query = request.POST['food_name']
+        dataType = 'Foundation'
+        pageSize = 10
+        pageNumber = 1
+        api_key = 'F92KbXwQwUXrteSO6PpQ7zocfxkkrt5inVeLVwqI'
+
+        url = "https://api.nal.usda.gov/fdc/v1/foods/search?query=" + query + "&dataType=" + dataType + "&pageSize=" + str(pageSize) + "&pageNumber=" + str(pageNumber) + "&api_key=" + api_key
+
+
+        payload={}
+        headers = {
+        'Cookie': 'ApplicationGatewayAffinity=5164bd01bfd5c519ce1bd2870a3ce176; ApplicationGatewayAffinityCORS=5164bd01bfd5c519ce1bd2870a3ce176'
+        }
+
+        response = requests.request("GET", url, headers=headers, data=payload)
+        json_response = response.json()
+
+        if len(response.json()['foods']) > 0:
+            phosphorus = 0
+            sodium = 0
+            potassium = 0
+            calcium = 0
+            protein = 0
+            sugar = 0
+
+            for nutrient in json_response['foods'][0]['foodNutrients']:
+                if nutrient['nutrientName'] == 'Phosphorus, P':
+                    phosphorus = nutrient['value']
+                if nutrient['nutrientName'] == 'Sodium, Na':
+                    sodium = nutrient['value']
+                if nutrient['nutrientName'] == 'Potassium, K':
+                    potassium = nutrient['value']
+                if nutrient['nutrientName'] == 'Calcium, Ca':
+                    calcium = nutrient['value']
+                if nutrient['nutrientName'] == 'Protein':
+                    protein = nutrient['value']
+                if nutrient['nutrientName'] == 'Carbohydrate, by difference':
+                    sugar = nutrient['value']
+
+            new_food.serving_size = 100
+            new_food.units = 'g'
+            new_food.potassium = potassium
+            new_food.phosphorus = phosphorus
+            new_food.sodium = sodium
+            new_food.calcium = calcium
+            new_food.protein = protein
+            new_food.sugar = sugar
+
+            new_food.save()
+        if request.method == 'POST':
+            new_entry = JournalEntry()
+
+            new_entry.food_name = request.POST['food_name']
+            new_entry.journalID = request.POST['journalID']
+            new_entry.date_recorded = request.POST['date']
+            new_entry.time_recorded = request.POST['time']
+            new_entry.amount = request.POST['amount']
+
+            new_entry.save()
+
+    return redirect("entries")
+
+
     
-
-
-
-
-    
-

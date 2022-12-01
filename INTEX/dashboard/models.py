@@ -26,10 +26,10 @@ class Person(models.Model):
     first_name = models.CharField(max_length = 30)
     last_name = models.CharField(max_length = 30)
     comorbidity = models.ForeignKey('Comorbidity', null=True, blank=True, on_delete=models.SET_NULL)
-    date_of_birth = models.DateField(default=django.utils.timezone.now)
+    date_of_birth = models.DateField()
     weight = models.IntegerField()
     height = models.IntegerField()
-    gender = models.CharField(max_length=30, default="Select")
+    gender = models.CharField(max_length=30, default="Male")
     race = models.ForeignKey('Race', null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
@@ -42,13 +42,13 @@ class JournalEntry(models.Model):
     personID = models.ForeignKey('auth.User', null=True, blank=True, on_delete=models.SET_NULL)
     food_name = models.ForeignKey('Food', on_delete=models.SET_NULL)
     journalID = models.AutoField(primary_key=True)
-    date_time_recorded = models.DateTimeField(default=datetime.now(), blank=True)
-    date_time_eaten = models.DateTimeField()
+    date_recorded = models.DateField(default=datetime.today(), blank=True)
+    time_recorded = models.TimeField(default=datetime.now().strftime("%H:%M:%S"), blank=True)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     food_name = models.CharField(max_length=100)
     
     def __str__(self):
-        return str(self.journalID) + " " + str(self.date_time_recorded)
+        return str(self.journalID) + " " + str(self.date_recorded)
 
     class Meta:
         db_table = 'Journal Entry'

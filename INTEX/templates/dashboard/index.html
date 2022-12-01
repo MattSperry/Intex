@@ -7,7 +7,7 @@
     {% if user.is_authenticated %}
     
     <li class="nav-item">
-      <h4>Welcome, {{currentUser.first_name}} {{currentUser.last_name}}!</h4>
+      <h4>Welcome, <b>{{currentUser.first_name}} {{currentUser.last_name}}</b>!</h4>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="{% url 'dashboard-profile' %}">View Profile</a>
@@ -15,7 +15,7 @@
     <li class="nav-item">
       <a class="nav-link" href="/logout">Logout</a>
     </li>
-       {% else %}
+    {% else %}
 
     <li class="nav-item">
       <a class="nav-link" href="/login">Login</a>
@@ -23,18 +23,24 @@
 
     {% endif %}
   </ul>
+
   <div class="col-md-8">
-    <canvas id="myChart" width="400" height="300"></canvas>
+    <canvas id="barchart" width="400" height="300"></canvas>
+  </div>
+
+  <div class="col-md-8">
+    <canvas id="timeline" width="400" height="300"></canvas>
+  </div>
+
     <script>
-      const ctx = document.getElementById("myChart").getContext("2d");
-      const myChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: [{% for data in data %} '{{data.movie}}', {% endfor %}],
+    //bar data
+      const data = {
+        labels: [{% for data in names %} '{{data}}', {% endfor %}],
           datasets: [
             {
-              label: "Domestic Box Office Amounts (in millions)",
-              data: [{% for data in data %} {{data.domesticBoxOffice}}, {% endfor %}],
+              type: "bar",
+              label: "Daily Nutient Intake",
+              data: [{% for data in totals %} {{data}}, {% endfor %}],
               backgroundColor: [
                 "rgba(255, 99, 132, 0.2)",
                 "rgba(54, 162, 235, 0.2)",
@@ -53,17 +59,63 @@
               ],
               borderWidth: 1,
             },
-          ],
-        },
+            {
+            type: 'line',
+            label: 'Recommended Daily Values',
+            data: [2750, 900, 2702, 2000, {{protein}}, {{sugar}}],
+            // borderColor: Utils.CHART_COLORS.red,
+            // fill: false,
+            // stepped: true
+        }
+          ]
+      };
+    
+    //bar config
+      const config = {
+        data,
         options: {
+          plugins: {
+            title: {
+                display: true,
+                text: 'Daily Nutrition',
+                font: {size: 20}
+            }
+        },
           scales: {
             y: {
               beginAtZero: true,
             },
           },
         },
-      });
+      }
+
+    //barchart render
+      const barChart = new Chart(
+        document.getElementById("barchart"),
+        config)
+  
+    //line data
+    const ldata ={
+      labels: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        datasets: [{
+          label: 'Weekly Nutrition',
+          data: [{%for data in wpot%} {{data}} {% endfor %}],
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+     }]}
+
+    //line config
+    const lconfig = {
+      type: 'line',
+      data: ldata,
+    };
+
+    //line render
+    const lchart = new Chart(
+      document.getElementById('timeline'),
+      lconfig);
     </script>
-  </div>
+  
 </div>
 {% endblock %}

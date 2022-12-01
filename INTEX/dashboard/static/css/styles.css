@@ -1,0 +1,16 @@
+body {
+    min-height: 400px;
+    margin-bottom: 100px;
+    clear: both;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid gray;
+    background-color: #343a40!important;
+    color: white;
+    text-align: center;
+}

@@ -4,5 +4,14 @@
 {% load crispy_forms_tags %}
 <h2>Dietary Tips</h2>
 <br>
-<p>Low on potassium? Eat spinach</p>
+<p><b>Because you have {{comorbidity}}, we recommend these foods:</b></p>
+
+{% for food in recommendedFoods %}
+{{food}}&emsp;&emsp;&emsp;
+{% endfor %}
+<br><br><br>
+<p><b>Avoid these foods:</b></p>
+{% for food in badFoods %}
+{{food}}&emsp;&emsp;&emsp;
+{% endfor %}
 {% endblock %}

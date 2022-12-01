@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import loginPageView, indexPageView, registerPageView, inputPageView, profilePageView, updateInfoView, logoutPageView, journalPageView, suggestionsPageView, journalEntryAdd, foodSearch, updateDataView, addFoodItem, addFoodItemEntry, entriesPageView
+from .views import loginPageView, indexPageView, registerPageView, inputPageView, profilePageView, updateInfoView, logoutPageView, journalPageView, suggestionsPageView, journalEntryAdd, foodSearch, updateDataView, addFoodItem, addFoodItemEntry, entriesPageView, updateEntries, inputProcess
  
 urlpatterns = [
     path("", loginPageView, name="dashboard-login"),
@@ -17,4 +17,6 @@ urlpatterns = [
     path("addFoodItem/", addFoodItem, name='addFoodItem'),
     path('addFoodItemEntry/', addFoodItemEntry, name='addFoodItemEntry'),
     path('entries/', entriesPageView, name='entries'),
+    path('updateEntries/<int:journalID>', updateEntries, name='update-entries'),
+    path('inputProcess/', inputProcess, name='dashboard-input-process')
 ]
