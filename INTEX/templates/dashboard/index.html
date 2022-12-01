@@ -32,7 +32,7 @@ $(document).ready(function() {
 });
 </script>
 {% if alerts %}
-    <div id="some_flag" title="Some Flag" style="background-color: red; text-align: center;">
+    <div id="some_flag" title="Close Banner" style="background-color: red; text-align: center;">
         <p style="color:white;">Warning! Your {{alerts}} levels are too high! See dietary tips.        (X)</p>
     </div>
 {% endif %}
@@ -157,13 +157,7 @@ a:hover { color: tomato; }
   }
 }
 </style>
-
-{% if alerts %}
-    <div id="some_flag" title="Some Flag" style="background-color: red; text-align: center;">
-        <p style="color:white;">Warning! Your {{alerts}} levels are too high! See dietary tips.        (X)</p>
-    </div>
-{% endif %}
-<div class="row mt-3 pt-3" style="margin-left: 4.0em;">
+<div class="row mt-3 pt-3" style="margin-left: 3.0em; margin-right: 1.0em">
   <div class="col-md-4">
   <ul class="navbar-nav mr-auto">
     {% if user.is_authenticated %}
@@ -172,14 +166,14 @@ a:hover { color: tomato; }
       <h4>Welcome, <b>{{currentUser.first_name}} {{currentUser.last_name}}</b>!</h4>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{% url 'dashboard-profile' %}">View Profile</a>
+      <a href="{% url 'dashboard-profile' %}">View Profile</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/logout">Logout</a>
+      <a href="/logout">Logout</a>
     </li>
     <br><br><br>
     <li class="nav-item">
-      <h4>Other Resources</h4>
+      <h4>Resources</h4>
     </li>
     <li class="nav-item" id="example2">
       <h3>Read more about kidney care and kidney-friendly recipes <a href="https://www.davita.com/diet-nutrition/recipes">here</a></h3>
@@ -190,7 +184,18 @@ a:hover { color: tomato; }
     </li>
     <br>
     <li class="nav-item" id="example2">
-      <p>test</p>
+      <h3>More helpful articles</h3>
+        <ul>
+          <li>
+            <a href="https://www.kidney.org/treatment-support">Newly diagnosed? Start here</a> 
+          </li>
+          <li>
+            <a href="https://www.niddk.nih.gov/health-information/kidney-disease/chronic-kidney-disease-ckd/eating-nutrition">Eating right for Chronic Kidney Disease</a> 
+          </li>
+          <li>
+            <a href="https://www.kidney.org/">Treament and Support</a> 
+          </li>
+        </ul> 
     </li>
 
     {% else %}
@@ -203,7 +208,8 @@ a:hover { color: tomato; }
   </ul>
 </div>
 
-  <div class="col-md-8">
+
+  <div class="col-md-8" style="margin-left: .5 em;">
     <div class="container">
       <div class="tabs">
         <div class="tabby-tab" >
@@ -224,6 +230,7 @@ a:hover { color: tomato; }
         
       </div>
 </div>
+
  <script>
 
   const plugin = {

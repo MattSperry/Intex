@@ -9,7 +9,7 @@
     <form method="POST" action="{% url 'food-search-update-journal' currentEntry.journalID %}" name="search">
         {% csrf_token %}
         <input type="text" name="search" placeholder="Search for a food here">
-        <button class = "btn btn-primary" type='submit'>Search</button>
+        <button id="searchButton" onload="Click" class = "btn btn-primary" type='submit'>Search</button>
     </form>
     <br>
     {% if food_names %}
@@ -33,11 +33,10 @@
 
     <form method="POST" action="{% url 'update-journal-entry'%}" name="form">
         {% csrf_token %}
-        {{currentEntry.journalID}}
         <input type="hidden" value="{{currentEntry.journalID}}" name="journalid">
         <label for="food_name">Food Name:</label>
         <select type="select" name="food_name" maxlength="200">
-            <option disabled selected hidden>{{currentEntry.food_name}}</option>
+            <option selected hidden>{{currentEntry.food_name}}</option>
             {% for i in food_names %}
             <option>{{ i }}</option>
             {% endfor %}

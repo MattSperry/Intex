@@ -6,8 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 import requests
-from datetime import date, timedelta
-import datetime
+from datetime import date, timedelta, datetime
  
 # Create your views here.
 def registerPageView(request):
@@ -130,7 +129,7 @@ def journalPageView(request):
 def suggestionsPageView(request):
     currentPerson = Person.objects.get(personID  = request.user.id)
 
-    data = JournalEntry.objects.filter(personID = request.user.id, date_recorded = datetime.datetime.today())
+    data = JournalEntry.objects.filter(personID = request.user.id, date_recorded = datetime.today())
     potassium = 0
     phosphorus = 0
     sodium = 0
@@ -235,7 +234,7 @@ def suggestionsPageView(request):
     return render(request, 'dashboard/suggestions.html', context)
 
 def indexPageView(request):
-    data = JournalEntry.objects.filter(personID = request.user.id, date_recorded = datetime.datetime.today())
+    data = JournalEntry.objects.filter(personID = request.user.id, date_recorded = datetime.today())
     potassium = 0
     phosphorus = 0
     sodium = 0
@@ -294,8 +293,8 @@ def indexPageView(request):
     if sugar > data[5]:
         alerts += 'Sugar '
 
-    for i in range(3,7) :
-        today = date.today()
+    for i in range(1,7) :
+        today = datetime.today()
         new_day = (today - timedelta(days=i))
         day_data = JournalEntry.objects.filter(personID = request.user.id, date_recorded = new_day)
         day_potassium = 0
@@ -312,13 +311,15 @@ def indexPageView(request):
             day_calcium += dfood.calcium * info.amount
             day_protein += ((dfood.protein * info.amount) * 10)
             day_sugar += ((dfood.sugar * info.amount) * 10)
-            #append daily values to week list
-            week_potassium.append(day_potassium)
-            week_phosphorus.append(day_phosphorus)
-            week_sodium.append(day_sodium)
-            week_calcium.append(day_calcium)
-            week_protein.append(day_protein)
-            week_sugar.append(day_sugar)
+
+        #append daily values to week list
+        week_potassium.append(day_potassium)
+        week_phosphorus.append(day_phosphorus)
+        week_sodium.append(day_sodium)
+        week_calcium.append(day_calcium)
+        week_protein.append(day_protein)
+        week_sugar.append(day_sugar)
+
         
             
     context = {
@@ -484,6 +485,8 @@ def entriesPageView(request) :
     for dates in data:
         if dates.date_recorded not in data_array:
             data_array.append(dates.date_recorded)
+
+    data_array = sorted(data_array, reverse=True)
 
     context = {
         "journal_entries" : data,

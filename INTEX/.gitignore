@@ -101,13 +101,14 @@ celerybeat-schedule.*
 .venv 
 env/ 
 venv/ 
-#*.env           UNCOMMENT FOR DEPLOYMENT
+*.env           
 ENV/ 
 env.bak/ 
 venv.bak/ 
 
-#*.pyc           UNCOMMENT FOR DEPLOYMENT
-#staticfiles/    UNCOMMENT FOR DEPLOYMENT
+*.pyc           
+db.sqlite3
+staticfiles/    
 
 # mkdocs documentation 
 /site 
