@@ -45,7 +45,7 @@ class JournalEntry(models.Model):
     date_recorded = models.DateField(default=datetime.today(), blank=True)
     time_recorded = models.TimeField(default=datetime.now().strftime("%H:%M:%S"), blank=True)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
-    food_name = models.CharField(max_length=100)
+    food_name = models.CharField(max_length=500)
     
     def __str__(self):
         return str(self.journalID) + " " + str(self.date_recorded)

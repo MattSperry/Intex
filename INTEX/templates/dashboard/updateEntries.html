@@ -6,9 +6,10 @@
 <br>
 <div class = "border p-3 shadow">
     <h4>Input Foods Eaten</h4>
+    <br>
     <form method="POST" action="{% url 'foodSearch' %}" name="search">
         {% csrf_token %}
-        <input type="text" name="search" placeholder="Search for a food here">
+        <input type="text" name="search" placeholder="To look for new food">
         <button class = "btn btn-success btn-block" type='submit'>Submit</button>
     </form>
     <br>
@@ -31,7 +32,7 @@
         <p> You have not searched a food, or your food item is not in the database</p>
     {% endif %}
 
-    <form method="POST" action="{% url 'update-entries'%}" name="form">
+    <form method="POST" action="{% url 'update-journal-entry' %}" name="form">
         {% csrf_token %}
         <input type="hidden" value="{{currentEntry.journalID}}" name="journalid">
         <label for="food_name">Food Name:</label>
@@ -40,8 +41,8 @@
         <input type="date" name="date" value="{{currentEntry.date_recorded}}"><br>
         <label for="time">Time Eaten:</label>
         <input type="time" name="time" value="{{currentEntry.time_recorded}}"><br>
-        <label for="amount">Amount (based on above serving size):</label>
-        <input type="number" name="amount" step=1 value="{{currentEntry.amount}}"><br>
+        <label for="amount">Amount (based on serving size):</label>
+        <input type="number" name="amount" step=0.5 value="{{currentEntry.amount}}"><br>
         <button class = "btn btn-success btn-block" type='submit'>Submit</button>
     </form>
 </div>

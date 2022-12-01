@@ -125,8 +125,8 @@ def suggestionsPageView(request):
 
     comorbidity = currentPerson.comorbidity.name
     if comorbidity == "High Blood Pressure":
-        reccomendedFoods = ['fish', 'spinach']
-        badFoods = ['soda', 'candy']
+        reccomendedFoods = ["Fruits", "Vegetables", "Whole grains", "Low-fat dairy", "Chicken", "Fish", "Nuts"]
+        badFoods = ["Sodium", "Red meat", "Candy", "Soda", "Tea", "Saturated fat", "Trans fat"]
     elif comorbidity == "Diabetes type 1":
         reccomendedFoods = ["Fish", "Spinach", "Kale", "Avocados", "Eggs", "Chia seeds", "Oatmeal",
         "Milk", "Cheese", "Beans", "Yogurt (plain)", "Nuts", "Broccoli", "Cauliflower", "Brussel sprouts", 
@@ -185,30 +185,58 @@ def indexPageView(request):
         rwater = 2700
         rsugar = 2500
 
-    day_potassium = 0
-    day_phosphorus = 0
-    day_sodium = 0
-    day_calcium = 0
-    day_protein = 0
-    day_sugar = 0
-
     week_potassium = []
     week_phosphorus = []
     week_sodium = []
     week_calcium = []
     week_protein = []
     week_sugar = []
+    week_potassium.append(potassium)
+    week_phosphorus.append(phosphorus)
+    week_sodium.append(sodium)
+    week_calcium.append(calcium)
+    week_protein.append(protein)
+    week_sugar.append(sugar)
+    
+    data = [2750, 900, 2702, 2000, rprotein, rsugar]
 
-    for i in range(1,8) :
-        day_data = JournalEntry.objects.filter(personID = request.user.id, date_recorded = (datetime.datetime.today() - timedelta(days=i)))
+    alerts = [
+        False, False, False, False, False, False
+    ]
+
+    if potassium > data[0]:
+        alerts[0] = True
+    if phosphorus > data[1]:
+        alerts[1] = True
+    if sodium > data[2]:
+        alerts[2] = True
+    if sodium > data[3]:
+        alerts[3] = True
+    if sodium > data[4]:
+        alerts[4] = True
+    if sodium > data[5]:
+        alerts[5] = True
+
+        
+
+    for i in range(3,7) :
+        today = date.today()
+        new_day = (today - timedelta(days=i))
+        day_data = JournalEntry.objects.filter(personID = request.user.id, date_recorded = new_day)
+        day_potassium = 0
+        day_phosphorus = 0
+        day_sodium = 0
+        day_calcium = 0
+        day_protein = 0
+        day_sugar = 0
         for info in day_data:
-            day_food = Food.objects.get(food_name = info.food_name)
-            day_potassium += day_food.potassium * info.amount
-            day_phosphorus += day_food.phosphorus * info.amount
-            day_sodium += day_food.sodium * info.amount
-            day_calcium += day_food.calcium * info.amount
-            day_protein += ((day_food.protein * info.amount) * 10)
-            day_sugar += ((day_food.sugar * info.amount) * 10)
+            dfood = Food.objects.get(food_name = info.food_name)
+            day_potassium += dfood.potassium * info.amount
+            day_phosphorus += dfood.phosphorus * info.amount
+            day_sodium += dfood.sodium * info.amount
+            day_calcium += dfood.calcium * info.amount
+            day_protein += ((dfood.protein * info.amount) * 10)
+            day_sugar += ((dfood.sugar * info.amount) * 10)
             #append daily values to week list
             week_potassium.append(day_potassium)
             week_phosphorus.append(day_phosphorus)
@@ -217,19 +245,21 @@ def indexPageView(request):
             week_protein.append(day_protein)
             week_sugar.append(day_sugar)
         
+            
     context = {
         'names' : ['Potassium (mg)', 'Phosphorus (mg)', 'Sodium (mg)', 'Calcium (mg)', 'Protein (cg)', 'Sugar (cg)'],
         'totals' : [potassium, phosphorus, sodium, calcium, protein, sugar],
+        'currentUser': Person.objects.get(personID  = request.user.id),
         'protein' : rprotein, 
         'water' : rwater,
         'sugar' : rsugar,
-        'wpot': week_potassium, 
-        'wphos':week_phosphorus, 
-        'wsod':week_sodium, 
-        'wcal':week_calcium, 
-        'wpro':week_protein, 
-        'wsug':week_sugar,
-        'currentUser': Person.objects.get(personID  = request.user.id)
+        'wpot' : week_potassium,#[::-1], 
+        'wphos' : week_phosphorus,#[::-1], 
+        'wsod' : week_sodium,#[::-1], 
+        'wcal' : week_calcium,#[::-1], 
+        'wpro' : week_protein,#[::-1], 
+        'wsug' : week_sugar,#[::-1],
+        'alerts' : alerts,
     }
     return render(request, 'dashboard/index.html', context)
 
@@ -237,12 +267,14 @@ def indexPageView(request):
 def journalEntryAdd(request):
     if request.method == 'POST':
         new_entry = JournalEntry()
+
         person = Person.objects.get(personID = request.user.id)
         new_entry.personID = person.personID
-        new_entry.date_eaten = request.POST['date']
-        new_entry.time_eaten = request.POST['time']
+        new_entry.date_recorded= request.POST['date']
+        new_entry.time_recorded = request.POST['time']
         new_entry.food_name = request.POST['food_name']
         new_entry.amount = request.POST['amount']
+
         new_entry.save()
 
         if len(Food.objects.filter(food_name = request.POST['food_name'])) <= 0:
@@ -267,7 +299,7 @@ def journalEntryAdd(request):
             response = requests.request("GET", url, headers=headers, data=payload)
             json_response = response.json()
 
-            if len(response.json()['foods']) > 0:
+            if len(json_response['foods']) > 0:
                 phosphorus = 0
                 sodium = 0
                 potassium = 0
@@ -373,26 +405,31 @@ def addFoodItemEntry(request):
 
 def entriesPageView(request) :
     data = JournalEntry.objects.filter(personID = request.user.id)
-    date_str = ""
+    data_array = []
+    for dates in data:
+        if dates.date_recorded not in data_array:
+            data_array.append(dates.date_recorded)
 
     context = {
         "journal_entries" : data,
         'currentUser': Person.objects.get(personID  = request.user.id),
-        'date_str' : date_str
+        'data_array' : data_array,
         }
     return render(request, 'dashboard/entries.html', context)
 
 
-def updateEntries(request, journalid):
+def updateEntries(request, journalID):
     context = {
         "currentUser" : Person.objects.get(personID  = request.user.id),
-        "currentEntry" : JournalEntry.objects.get(journalID = journalid)
+        "currentEntry" : JournalEntry.objects.get(journalID = journalID)
     }
     return render(request, "dashboard/updateEntries.html", context)
 
 
 def updateJournalEntry(request): 
+
     entry = JournalEntry.objects.get(journalID = request.POST['journalid'])
+
     entry.food_name = request.POST['food_name']
     entry.date_recorded = request.POST['date']
     entry.time_recorded = request.POST['time']
@@ -464,5 +501,8 @@ def updateJournalEntry(request):
 
     return redirect("entries")
 
-
+def deleteJournalEntry(request, journalID):
+    entry = JournalEntry.objects.get(journalID = journalID)
+    entry.delete()
+    return redirect('entries')
     
